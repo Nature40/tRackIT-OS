@@ -1,5 +1,5 @@
 FROM 2018-11-13-raspbian-stretch-lite.img
-TO Moon-Lift.img
+TO LiftCar.img
 
 PUMP 100
 
@@ -17,10 +17,6 @@ RUN bash -c 'echo "/usr/bin/tvservice -o" >> /etc/rc.local'
 # Disable LEDs
 RUN bash -c 'echo "echo 0 > /sys/class/leds/led0/brightness" >> /etc/rc.local'
 RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
-
-# Disable power led
-RUN bash -c 'echo "dtparam=pwr_led_trigger=none" >> /boot/config.txt'
-RUN bash -c 'echo "dtparam=pwr_led_activelow=off" >> /boot/config.txt'  
 
 # Set default password
 RUN bash -c 'echo "pi:natur" | chpasswd'
