@@ -1,0 +1,5 @@
+source Base.Pifile
+TO LiftSystem.img
+
+RUN apt-get install -y dnsmasq hostapd
+INSTALL LiftSystem/ /

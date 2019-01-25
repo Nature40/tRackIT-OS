@@ -1,51 +1,5 @@
-FROM 2018-11-13-raspbian-stretch-lite.img
+source Base.Pifile
 TO LiftCar.img
 
-PUMP 100
+INSTALL LiftCar/ /
 
-RUN raspi-config nonint do_serial 0
-RUN raspi-config nonint do_ssh 0
-RUN raspi-config nonint do_camera 0
-RUN raspi-config nonint do_i2c 0
-
-RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
-
-# Disable HDMI out
-RUN bash -c 'sed -i "$ d" /etc/rc.local'
-RUN bash -c 'echo "/usr/bin/tvservice -o" >> /etc/rc.local'
-
-# Disable LEDs
-RUN bash -c 'echo "echo 0 > /sys/class/leds/led0/brightness" >> /etc/rc.local'
-RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
-
-# Set default password
-RUN bash -c 'echo "pi:natur" | chpasswd'
-
-# Install local authorized_keys file
-RUN mkdir -p /home/pi/.ssh
-RUN chmod 700 /home/pi/.ssh
-INSTALL 600 authorized_keys /home/pi/.ssh/authorized_keys
-RUN chown pi:pi /home/pi/.ssh
-RUN chown pi:pi /home/pi/.ssh/authorized_keys
-
-# Install software
-RUN apt-get update
-RUN apt-get install -y \
-    python3 python3-pip \
-    i2c-tools \
-    vim \
-    git \
-    libusb-1.0-0-dev
-
-RUN pip3 install \
-    Adafruit_DHT \
-    Adafruit_PureIO \
-    Adafruit_GPIO \
-    tsl2561 \
-    picamera
-
-# Install uhubctl
-RUN wget https://github.com/mvp/uhubctl/archive/v2.0.0.tar.gz -O uhubctl-2.0.0.tar.gz
-RUN tar xfv uhubctl-2.0.0.tar.gz
-RUN bash -c 'cd uhubctl-2.0.0; make; make install'
-RUN rm -rf uhubctl-*
