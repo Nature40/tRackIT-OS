@@ -1,4 +1,5 @@
 FROM 2018-11-13-raspbian-stretch-lite.img
+TO Base.img
 
 PUMP 100
 
@@ -48,4 +49,9 @@ RUN pip3 install \
 RUN wget https://github.com/mvp/uhubctl/archive/v2.0.0.tar.gz -O uhubctl-2.0.0.tar.gz
 RUN tar xfv uhubctl-2.0.0.tar.gz
 RUN bash -c 'cd uhubctl-2.0.0; make; make install'
-RUN rm -rf uhubctl-*
+RUN rm -rf uhubctl-2.0.0 uhubctl-2.0.0.tar.gz
+
+# Install RTL8822BU driver
+RUN wget http://downloads.fars-robotics.net/wifi-drivers/8822bu-drivers/8822bu-4.14.79-v7-1159.tar.gz
+RUN tar xf 8822bu-4.14.79-v7-1159.tar.gz
+RUN ./install.sh

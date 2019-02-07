@@ -1,4 +1,4 @@
-source Base.Pifile
+FROM Base.img
 TO LiftCar.img
 
 INSTALL LiftCar/ /
