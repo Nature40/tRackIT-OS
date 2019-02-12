@@ -1,5 +1,6 @@
 FROM Base.img
 TO LiftCar.img
 
-INSTALL LiftCar/ /
+RUN pip3 install RPi.GPIO
 
+INSTALL LiftCar/ /
