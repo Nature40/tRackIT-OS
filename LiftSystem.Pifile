@@ -1,5 +1,0 @@
-FROM Base.img
-TO LiftSystem.img
-
-RUN apt-get install -y dnsmasq hostapd
-INSTALL LiftSystem/etc /
