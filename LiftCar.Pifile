@@ -1,6 +1,6 @@
 FROM Base.img
 TO LiftCar.img
 
-RUN pip3 install RPi.GPIO
+RUN pip3 install pyyaml RPi.GPIO schedule flask pytimeparse
 
 INSTALL LiftCar/ /
