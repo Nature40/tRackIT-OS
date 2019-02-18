@@ -20,6 +20,7 @@ RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
 
 # Set default password
 RUN bash -c 'echo "pi:natur" | chpasswd'
+RUN timedatectl set-timezone Europe/Berlin
 
 # Install files in Base folder
 INSTALL Base /
