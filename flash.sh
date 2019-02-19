@@ -13,9 +13,9 @@ else
     umount "$2"
 fi
 
-IMG_SIZE=`du -m "$1" | cut -f1`
+IMG_PROPERTIES=(`ls -l LiftCar.img`)
 
 echo
-echo "# Flashing $IMG_SIZE MB"
-dd if="$1" | pv -s ${IMG_SIZE}m | dd of="$2" bs=1048576
+echo "# Flashing ${IMG_PROPERTIES[4]} bytes"
+dd if="$1" 2>/dev/null | pv -s ${IMG_PROPERTIES[4]} | dd of="$2" bs=1048576 2>/dev/null
 
