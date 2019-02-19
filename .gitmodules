@@ -1,3 +1,6 @@
 [submodule "pimod"]
 	path = pimod
 	url = https://github.com/Nature40/pimod.git
+[submodule "pysensorproxy"]
+	path = pysensorproxy
+	url = https://github.com/Nature40/pysensorproxy.git
