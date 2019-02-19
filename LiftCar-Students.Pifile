@@ -1,0 +1,6 @@
+FROM LiftCar.img
+
+# hotspot
+RUN apt-get install -y dnsmasq hostapd
+INSTALL Sensorbox/etc /
+
