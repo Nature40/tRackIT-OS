@@ -1,10 +1,11 @@
 version: '3'
 services:
-    pimod:
-        build: ./pimod
-        privileged: true
-        volumes:
-            - .:/sensorboxes
-        working_dir: /sensorboxes
-        environment:
-            - PATH:'$PATH:/pimod'
+  pimod:
+    build: ./pimod
+    privileged: true
+    tty: true
+    volumes:
+      - .:/sensorboxes
+    working_dir: /sensorboxes
+    environment:
+      - PATH:'$PATH:/pimod'
