@@ -1,6 +1,16 @@
 FROM Base.img
 TO LiftCar.img
 
-RUN pip3 install pyyaml RPi.GPIO schedule flask pytimeparse
+RUN pip3 install RPi.GPIO
 
-INSTALL LiftCar/ /
+# install home directory
+INSTALL LiftCar/home/pi/liftdemo.py /home/pi/liftdemo.py
+
+# install pysensorproxy
+INSTALL pysensorproxy /
+RUN pip3 install /pysensorproxy
+INSTALL LiftCar/boot/ /
+
+# install pysensorproxy service
+INSTALL LiftCar/etc/ /
+RUN systemctl enable sensorproxy.service

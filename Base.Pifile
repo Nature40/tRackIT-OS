@@ -23,7 +23,7 @@ RUN bash -c 'echo "pi:natur" | chpasswd'
 RUN timedatectl set-timezone Europe/Berlin
 
 # Install files in Base folder
-INSTALL Base /
+INSTALL Base/home /
 
 # Install fix permissions for ssh files
 INSTALL Base/home/pi/.ssh /home/pi/.ssh

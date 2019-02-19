@@ -1,0 +1,24 @@
+sensors:
+  am2302:
+    type: AM2302
+    pin: 4
+  lumen:
+    type: TSL2561
+  mic:
+    type: Microphone
+    device_name: hw:1,0
+    file_type: wav
+    format: S16_LE
+    rate: 44100
+  cam:
+    type: PiCamera
+
+storage: '/tmp/pysensorproxy'
+wifi:
+  interface: "wlan0"
+
+lift:
+  ssid: 'LiftSystem 949f'
+  psk: 'supersicher'
+  hall_bottom: 5
+  hall_top: 6

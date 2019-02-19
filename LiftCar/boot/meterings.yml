@@ -1,0 +1,15 @@
+ongoing:
+  sensors:
+    am2302: {}
+    lumen: {}
+  schedule:
+    interval: "5m"
+
+morning:
+  sensors:
+    cam: {}
+    mic: {}
+  schedule:
+    start: "06h"
+    end: "11h"
+    interval: "30m"

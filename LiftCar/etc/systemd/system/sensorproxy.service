@@ -1,0 +1,10 @@
+[Unit]
+Description=Sensorproxy
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/sensorproxy --config /boot/sensorproxy.yml --metering /boot/meterings.yml  
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
