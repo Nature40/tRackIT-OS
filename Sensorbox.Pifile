@@ -2,7 +2,7 @@ FROM Base.img
 
 # hotspot
 RUN apt-get install -y dnsmasq hostapd
-INSTALL LiftSystem/etc /
+INSTALL Sensorbox/etc /
 
 # wireguard
 RUN apt-get update
