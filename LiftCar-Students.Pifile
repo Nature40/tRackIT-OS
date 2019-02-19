@@ -4,3 +4,4 @@ FROM LiftCar.img
 RUN apt-get install -y dnsmasq hostapd
 INSTALL Sensorbox/etc /
 
+INSTALL Sensorbox/templates.d /
