@@ -34,6 +34,7 @@ INSTALL Base/home /
 
 # Install fix permissions for ssh files
 INSTALL Base/home/pi/.ssh /home/pi/.ssh
+RUN chown pi:pi /home/pi
 RUN chown pi:pi /home/pi/.ssh
 RUN chown pi:pi /home/pi/.ssh/authorized_keys
 
