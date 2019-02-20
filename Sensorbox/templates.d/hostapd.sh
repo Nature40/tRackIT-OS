@@ -27,6 +27,5 @@ ctrl_interface=/var/run/hostapd
 ctrl_interface_group=0
 EOF
 
-echo "### Written hostapd.conf for $SSID, restarting hostapd"
-systemctl restart hostapd
+echo "### Written hostapd.conf for $SSID"
 
