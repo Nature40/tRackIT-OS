@@ -25,6 +25,7 @@ RUN bash -c 'echo >> /etc/rc.local'
 
 # Execute templates for config files
 RUN mkdir -p /templates.d/
+RUN bash -c 'echo "shopt -s nullglob" >> /etc/rc.local'
 RUN bash -c 'echo "for SCRIPT in /templates.d/*; do \$SCRIPT; done" >> /etc/rc.local'
 RUN bash -c 'echo >> /etc/rc.local'
 
