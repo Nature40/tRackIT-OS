@@ -6,10 +6,12 @@ sensors:                          # list of sensors
     type: TSL2561
   mic:
     type: Microphone
-    device_name: hw:1,0               # for Microphone all parameters are optional
+    card: 1
+    device: 0
     file_type: wav
     sample_format: S16_LE
     rate: 44100
+    level: 100%
   cam:
     type: PiCamera
     img_format: "jpeg"
