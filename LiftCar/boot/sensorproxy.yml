@@ -15,6 +15,10 @@ sensors:                          # list of sensors
   cam:
     type: PiCamera
     img_format: "jpeg"
+  rsync:
+    type: Rsync
+    destination: /tmp/sink  # rsync remote string
+    remove_source_files: True  # delete copied files
 
 storage: '/pysensorproxy/data'    # path to save files
 wifi:                              # wifi properties to be configured

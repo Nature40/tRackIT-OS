@@ -13,5 +13,6 @@ ongoing:
   sensors:
     am2302: {}            # empty config (no parameters available here)
     lumen: {}
+    rsync: {}
   schedule:
     interval: "1m"
