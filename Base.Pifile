@@ -77,3 +77,6 @@ RUN rm -rf uhubctl-2.0.0 uhubctl-2.0.0.tar.gz
 RUN wget http://downloads.fars-robotics.net/wifi-drivers/8822bu-drivers/8822bu-4.14.79-v7-1159.tar.gz
 RUN tar xf 8822bu-4.14.79-v7-1159.tar.gz
 RUN ./install.sh
+
+# Generate ssh key 
+RUN ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
