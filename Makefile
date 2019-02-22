@@ -5,7 +5,7 @@ RUN_CMD=docker-compose run pimod pimod.sh
 
 all: Base.img LiftCar.img
 clean:
-	rm Base.img LiftCar.img LiftCar-Students.img
+	rm -f Base.img LiftCar.img LiftCar-Students.img
 
 Base.img: Base.Pifile Base
 	${RUN_CMD} Base.Pifile
