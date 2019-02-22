@@ -1,5 +1,8 @@
 RUN_CMD=docker-compose run pimod pimod.sh
 
+.PHONY: clean all
+.DELETE_ON_ERROR:
+
 all: Base.img LiftCar.img
 clean:
 	rm Base.img LiftCar.img LiftCar-Students.img
