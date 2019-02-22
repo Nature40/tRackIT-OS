@@ -8,7 +8,15 @@ RUN raspi-config nonint do_ssh 0
 RUN raspi-config nonint do_camera 0
 RUN raspi-config nonint do_i2c 0
 
+# Enable the DS3231 RTC
 RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
+RUN update-rc.d hwclock.sh enable
+
+# remove fake hwclock
+RUN update-rc.d fake-hwclock remove
+RUN apt-get remove -y fake-hwclock
+RUN rm /etc/cron.hourly/fake-hwclock
+RUN rm /etc/init.d/fake-hwclock
 
 # Disable HDMI out
 RUN bash -c 'sed -i "$ d" /etc/rc.local'
