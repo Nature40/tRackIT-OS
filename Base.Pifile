@@ -10,13 +10,11 @@ RUN raspi-config nonint do_i2c 0
 
 # Enable the DS3231 RTC
 RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
-RUN update-rc.d hwclock.sh enable
 
 # remove fake hwclock
-RUN update-rc.d fake-hwclock remove
-RUN apt-get remove -y fake-hwclock
-RUN rm /etc/cron.hourly/fake-hwclock
-RUN rm /etc/init.d/fake-hwclock
+RUN apt-get -y remove fake-hwclock
+RUN update-rc.d -f fake-hwclock remove
+RUN systemctl disable fake-hwclock
 
 # Disable HDMI out
 RUN bash -c 'sed -i "$ d" /etc/rc.local'
@@ -25,7 +23,6 @@ RUN bash -c 'echo >> /etc/rc.local'
 
 # Execute templates for config files
 RUN mkdir -p /templates.d/
-RUN bash -c 'echo "shopt -s nullglob" >> /etc/rc.local'
 RUN bash -c 'echo "for SCRIPT in /templates.d/*; do \$SCRIPT; done" >> /etc/rc.local'
 RUN bash -c 'echo >> /etc/rc.local'
 
@@ -42,6 +39,7 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # Install files in Base folder
 INSTALL Base/home /
+INSTALL Base/lib /
 
 # Install fix permissions for ssh files
 INSTALL Base/home/pi/.ssh /home/pi/.ssh
