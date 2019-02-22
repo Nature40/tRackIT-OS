@@ -79,5 +79,14 @@ RUN wget http://downloads.fars-robotics.net/wifi-drivers/8822bu-drivers/8822bu-4
 RUN tar xf 8822bu-4.14.79-v7-1159.tar.gz
 RUN ./install.sh
 
-# Generate ssh key 
-RUN ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
+# Generate ssh host keys
+RUN ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
+RUN ssh-keygen -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key
+RUN ssh-keygen -t ed25519 -N '' -f /etc/ssh/ssh_host_ed25519_key
+RUN ssh-keygen -t ecdsa -N '' -f /etc/ssh/ssh_host_ecdsa_key
+
+# Generate ssh user key
+RUN sudo -u pi ssh-keygen -t ed25519 -N '' -f /home/pi/.ssh/id_ed25519
+
+# Authorize for self ssh (sensorboxes interconnection)
+RUN sudo -u pi bash -c 'cat ~/.ssh/id_ed25519.pub | tee -a ~/.ssh/authorized_keys' 
