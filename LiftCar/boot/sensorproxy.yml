@@ -1,12 +1,12 @@
-sensors:                  # list of sensors
-  am2302:                   # name (choose freely)
-    type: AM2302              # type (must be in sensorproxy.sensors.*)
-    pin: 4                    # additional configuration parameter
+sensors:                          # list of sensors
+  am2302:                           # name (choose freely)
+    type: AM2302                      # type (must be in sensorproxy.sensors.*)
+    pin: 4                            # additional configuration parameter
   lumen:
     type: TSL2561
   mic:
     type: Microphone
-    device_name: hw:1,0       # for Microphone all parameters are optional
+    device_name: hw:1,0               # for Microphone all parameters are optional
     file_type: wav
     format: S16_LE
     rate: 44100
@@ -14,11 +14,11 @@ sensors:                  # list of sensors
     type: PiCamera
     img_format: "jpeg"
 
-storage: '/pysensorproxy' # path to save files
-wifi:                     # wifi properties to be configured
-  interface: "wlan0"        # the interface to be managed
+storage: '/pysensorproxy/data'    # path to save files
+wifi:                              # wifi properties to be configured
+  interface: "wlan0"                # the interface to be managed
 
-lift:                     # lift configuration
+lift:                             # lift configuration
   ssid: 'LiftSystem 949f'
   psk: 'supersicher'
   hall_bottom: 5

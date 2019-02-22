@@ -1,19 +1,17 @@
-morning:              # name of the measuring cycle
+test:              # name of the measuring cycle
   sensors:              # dict of the sensors to be measured
     cam:                  # reference to `cam`, configured in the static config (yml)
       res_X: 3280           # image resolution, set according to https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
       res_Y: 2464
       adjust_time_s: 2      # time to adjust to brightness
     mic:
-      duration_s: 1         # duration of the audio file to be recorded
+      duration_s: 30        # duration of the audio file to be recorded
   schedule:               # schedule parametes
-    interval: "30m"         # measurement is mandatory (max. 24h)
-    start: "06h"            # optional, according to local time
-    end: "11h"              # optional, according to local time
+    interval: "5m"         # measurement is mandatory (max. 24h)
 
 ongoing:
   sensors:
     am2302: {}            # empty config (no parameters possible here)
     lumen: {}
   schedule:
-    interval: "5m"
+    interval: "1m"
