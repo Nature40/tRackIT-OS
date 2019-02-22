@@ -8,7 +8,7 @@ sensors:                          # list of sensors
     type: Microphone
     device_name: hw:1,0               # for Microphone all parameters are optional
     file_type: wav
-    format: S16_LE
+    sample_format: S16_LE
     rate: 44100
   cam:
     type: PiCamera

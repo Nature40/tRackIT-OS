@@ -5,7 +5,7 @@ test:              # name of the measuring cycle
       res_Y: 2464
       adjust_time_s: 2      # time to adjust to brightness
     mic:
-      duration_s: 30        # duration of the audio file to be recorded
+      duration_s: 30        # duration of the audio file to be recorded in seconds
   schedule:               # schedule parametes
     interval: "5m"         # measurement is mandatory (max. 24h)
 
