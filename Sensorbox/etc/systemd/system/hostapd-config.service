@@ -1,0 +1,13 @@
+[Unit]
+Description=hostapd-config
+After=networking.service
+# hostapd is started with sysinit, write config beforehand
+Before=sysinit.target
+
+[Service]
+ExecStart=/bin/bash -c '/etc/hostapd/hostapd.conf.sh > /etc/hostapd/hostapd.conf'
+Type=oneshot
+StandardOutput=journal
+
+[Install]
+WantedBy=sysinit.target

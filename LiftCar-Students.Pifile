@@ -4,4 +4,5 @@ FROM LiftCar.img
 RUN apt-get install -y dnsmasq hostapd
 INSTALL Sensorbox/etc /
 
-INSTALL Sensorbox/templates.d /
+# enable hostapd-config script
+RUN systemctl enable hostapd-config.service
