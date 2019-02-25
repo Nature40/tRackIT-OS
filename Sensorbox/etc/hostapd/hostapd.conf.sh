@@ -6,9 +6,9 @@ PASS="BirdsArentReal"
 
 echo "Running RaspberryPi hostapd configuration script..." 1>&2
 
-ID=`echo la`#`cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2 | sed 's/^0*//'`
+ID=`cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2 | sed 's/^0*//'`
 
-if [ $? ]; then
+if [ "$ID" == "" ]; then
     echo "Error reading Raspberry Pi serial number, defaulting to $SSID" 1>&2
 else
     SSID=$SSID.$ID
