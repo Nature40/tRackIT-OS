@@ -8,7 +8,6 @@ sensors:                          # list of sensors
     type: Microphone
     card: 1
     device: 0
-    file_type: wav
     sample_format: S16_LE
     rate: 44100
     level: 100%
