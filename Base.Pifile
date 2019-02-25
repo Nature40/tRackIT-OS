@@ -21,11 +21,6 @@ RUN bash -c 'sed -i "$ d" /etc/rc.local'
 RUN bash -c 'echo "/usr/bin/tvservice -o" >> /etc/rc.local'
 RUN bash -c 'echo >> /etc/rc.local'
 
-# Execute templates for config files
-RUN mkdir -p /templates.d/
-RUN bash -c 'echo "for SCRIPT in /templates.d/*; do \$SCRIPT; done" >> /etc/rc.local'
-RUN bash -c 'echo >> /etc/rc.local'
-
 # Disable LEDs
 RUN bash -c 'echo "echo 0 > /sys/class/leds/led0/brightness" >> /etc/rc.local'
 RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
