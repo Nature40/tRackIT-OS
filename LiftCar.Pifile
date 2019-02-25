@@ -1,6 +1,7 @@
 FROM Base.img
 TO LiftCar.img
 
+RUN apt-get install -y flac
 RUN pip3 install RPi.GPIO
 
 # install home directory
