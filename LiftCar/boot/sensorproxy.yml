@@ -24,7 +24,7 @@ wifi:                              # wifi properties to be configured
   interface: "wlan0"                # the interface to be managed
 
 lift:                             # lift configuration
-  ssid: 'nature40.liftsystem.'
+  ssid: 'nature40.liftsystem.34a4'
   psk: 'supersicher'
   hall_bottom: 5
   hall_top: 6
