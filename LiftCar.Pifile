@@ -10,11 +10,13 @@ INSTALL LiftCar/home/pi/liftdemo.py /home/pi/liftdemo.py
 # install pysensorproxy
 INSTALL pysensorproxy /
 RUN pip3 install /pysensorproxy
-INSTALL LiftCar/boot/ /
+INSTALL LiftCar/boot /
 
 # install pysensorproxy service
-INSTALL LiftCar/etc/ /
+INSTALL LiftCar/etc /
 RUN systemctl enable sensorproxy.service
 
 # create dummy sink for rsync
 RUN mkdir /tmp/sink
+
+RUN bash -c 'echo "denyinterfaces wlan0" >> /etc/dhcpcd.conf'
