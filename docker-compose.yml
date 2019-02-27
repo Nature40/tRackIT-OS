@@ -6,6 +6,7 @@ services:
     tty: true
     volumes:
       - .:/sensorboxes
+      - ./pimod:/pimod
     working_dir: /sensorboxes
     environment:
       - PATH:'$PATH:/pimod'
