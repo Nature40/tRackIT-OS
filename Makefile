@@ -17,3 +17,6 @@ LiftCar.img: Base.img LiftCar.Pifile LiftCar
 LiftCar-Students.img: LiftCar.img LiftCar-Students.Pifile Sensorbox
 	${RUN_CMD} LiftCar-Students.Pifile
 
+Sensorbox.img: Base.img Sensorbox.Pifile
+	${RUN_CMD} Sensorbox.Pifile
+
