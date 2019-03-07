@@ -9,8 +9,9 @@ INSTALL LiftCar/home/pi/liftdemo.py /home/pi/liftdemo.py
 
 # install pysensorproxy
 INSTALL pysensorproxy /
-RUN pip3 install /pysensorproxy
-INSTALL LiftCar/boot /
+RUN pip3 install -e /pysensorproxy
+INSTALL pysensorproxy/examples/sensorproxy.yml /boot
+INSTALL pysensorproxy/examples/meterings.yml /boot
 
 # install pysensorproxy service
 INSTALL LiftCar/etc /
