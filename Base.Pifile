@@ -59,6 +59,7 @@ RUN pip3 install \
     Adafruit_DHT \
     Adafruit_PureIO \
     Adafruit_GPIO \
+    RPi.GPIO \
     tsl2561 \
     picamera
 
