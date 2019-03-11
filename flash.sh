@@ -13,7 +13,7 @@ else
     umount "$2"
 fi
 
-IMG_PROPERTIES=(`ls -l LiftCar.img`)
+IMG_PROPERTIES=(`ls -l "$1"`)
 
 echo
 echo "# Flashing ${IMG_PROPERTIES[4]} bytes"

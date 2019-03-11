@@ -1,8 +1,0 @@
-FROM LiftCar.img
-
-# hotspot
-RUN apt-get install -y dnsmasq hostapd
-INSTALL Sensorbox/etc /
-
-# enable hostapd-config script
-RUN systemctl enable hostapd-config.service

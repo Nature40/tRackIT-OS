@@ -1,12 +1,7 @@
 FROM Base.img
 
-# hotspot
+# install hotspot software
 RUN apt-get install -y dnsmasq hostapd
-INSTALL Sensorbox/etc /
-
-# enable hostapd-config script
-RUN systemctl enable hostapd-config.service
-RUN systemctl enable hostapd.service
 
 # wireguard
 #RUN apt-get update
@@ -17,3 +12,19 @@ RUN systemctl enable hostapd.service
 #RUN bash -c "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | sudo tee -a /etc/apt/preferences.d/limit-unstable"
 #RUN apt-get update
 #RUN apt-get install -y --allow-unauthenticated wireguard
+
+# install pysensorproxy
+INSTALL pysensorproxy /
+RUN pip3 install -e /pysensorproxy
+INSTALL pysensorproxy/examples/sensorproxy.yml /boot
+INSTALL pysensorproxy/examples/meterings.yml /boot
+
+# install config files
+INSTALL Sensorbox/etc /
+
+# enable sensorproxy
+RUN systemctl enable sensorproxy.service
+
+# enable hostapd-config script
+RUN systemctl enable hostapd-config.service
+RUN systemctl enable hostapd.service
