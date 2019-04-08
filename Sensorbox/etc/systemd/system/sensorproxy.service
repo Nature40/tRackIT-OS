@@ -3,7 +3,7 @@ Description=Sensorproxy
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/sensorproxy --verbose --config /boot/sensorproxy.yml --metering /boot/meterings.yml
+ExecStart=/usr/local/bin/sensorproxy -vv --config /boot/sensorproxy.yml --metering /boot/meterings.yml
 Restart=always
 
 [Install]
