@@ -35,14 +35,27 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # Install files in Base folder
 INSTALL Base/home /
 INSTALL Base/lib /
+INSTALL Base/etc /
 
-# Install fix permissions for ssh files
+# Install host ssh files
+INSTALL Base/etc/ssh /etc/ssh
+RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
+RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
+RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
+RUN systemctl disable regenerate_ssh_host_keys
+
+
+# Install user ssh files and fix permissions
 INSTALL Base/home/pi/.ssh /home/pi/.ssh
 RUN chown pi:pi /home/pi
-RUN chmod 755   /home/pi
 RUN chown pi:pi /home/pi/.ssh
-RUN chmod 755   /home/pi/.ssh
+RUN chown pi:pi /home/pi/.ssh/id_ed25519
+RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
 RUN chown pi:pi /home/pi/.ssh/authorized_keys
+RUN chmod 755   /home/pi
+RUN chmod 700   /home/pi/.ssh
+RUN chmod 600   /home/pi/.ssh/id_ed25519
+RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
 RUN chmod 644   /home/pi/.ssh/authorized_keys
 
 # Install software
@@ -74,14 +87,19 @@ RUN wget http://downloads.fars-robotics.net/wifi-drivers/8822bu-drivers/8822bu-4
 RUN tar xf 8822bu-4.14.79-v7-1159.tar.gz
 RUN ./install.sh
 
-# Generate ssh host keys
-RUN ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-RUN ssh-keygen -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key
-RUN ssh-keygen -t ed25519 -N '' -f /etc/ssh/ssh_host_ed25519_key
-RUN ssh-keygen -t ecdsa -N '' -f /etc/ssh/ssh_host_ecdsa_key
+# Install hotspot software
+RUN apt-get install -y dnsmasq hostapd
 
-# Generate ssh user key
-RUN sudo -u pi ssh-keygen -t ed25519 -N '' -f /home/pi/.ssh/id_ed25519
-
-# Authorize for self ssh (sensorboxes interconnection)
-RUN sudo -u pi bash -c 'cat ~/.ssh/id_ed25519.pub | tee -a ~/.ssh/authorized_keys' 
+# Install wireguard
+RUN apt-get install -y dirmngr
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC
+RUN bash -c 'echo "deb http://deb.debian.org/debian/ unstable main" | tee -a /etc/apt/sources.list.d/unstable.list'
+RUN bash -c "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | tee -a /etc/apt/preferences.d/limit-unstable"
+RUN apt-get update
+RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade'
+RUN apt-get install -y raspberrypi-kernel-headers wireguard
+RUN killall -s SIGKILL dirmngr  # stop dirmngr, which blocks some /dev-devices
+RUN sysctl -w net.ipv4.ip_forward=1
+RUN mkdir -p /etc/wireguard
