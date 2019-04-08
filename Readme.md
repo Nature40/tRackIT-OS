@@ -1,6 +1,20 @@
-# Sensorboxes
+# Natur 4.0: Sensorboxes
 
-This repo contains distribution definitions (using pimod) and configuration files for sensorboxes in the context of the LOEWE Nature 4.0 project.
+This repo collects software and hardware descriptions and links used in Natur 4.0 Sensorboxes. It contains distribution definitions (using pimod) and configuration files for sensorboxes.
+
+## Overview
+
+An installation currently consist of those parts:
+
+ - LiftBox: various Sensors, running up and down
+ - LiftSystem: stateless ESP32 Board and Motor Driver to run the Lift
+ - PlanetBox: various sensors, Harddrive as data sink, LTE uplink
+
+## Configuration
+
+To setup an installation one has to install the prepared images to the devices and configure them. The configuration mainly consists of adapting the static config (`/boot/sensorproxy.yml`) as well as the measurement cycle (`/boot/meterings.yml`).
+
+More details can be found in [pysensorproxy Readme](https://github.com/nature40/pysensorproxy).
 
 ## Build Distro
 
