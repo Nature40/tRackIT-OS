@@ -6,8 +6,8 @@ This repo collects software and hardware descriptions and links used in Natur 4.
 
 An installation currently consist of those parts:
 
+ - [LiftSystem](https://github.com/Nature40/Satellite-LiftSystem): stateless ESP32 Board and Motor Driver to run the Lift
  - LiftBox: various Sensors, running up and down
- - LiftSystem: stateless ESP32 Board and Motor Driver to run the Lift
  - PlanetBox: various sensors, Harddrive as data sink, LTE uplink
 
 ## Configuration
@@ -16,12 +16,32 @@ To setup an installation one has to install the prepared images to the devices a
 
 More details can be found in [pysensorproxy Readme](https://github.com/nature40/pysensorproxy).
 
+## Useful commands
+
+##### pysensorproxy daemon control
+
+```bash
+# control daemon
+sudo systemctl start sensorproxy
+sudo systemctl stop sensorproxy
+systemctl status sensorproxy
+
+# view logs
+journalctl -u sensorproxy
+
+# follow current log
+journalctl -fu sensorproxy
+
+# run standalone instance
+sudo sensorproxy -vv --config /boot/sensorproxy.yml --metering /boot/meterings.yml
+```
+
 ## Build Distro
 
 A distribution can be build conviniently by using docker-compose:
 
-```
-$ docker-compose run pimod pimod.sh LiftCar.Pifile
+```bash
+$ docker-compose run pimod pimod.sh Sensorbox.Pifile
 ### FROM 2018-11-13-raspbian-stretch-lite.img
 ### TO LiftCar.img
 ### PUMP 100
