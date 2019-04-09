@@ -27,6 +27,9 @@ RUN chmod 600   /home/pi/.ssh/id_ed25519
 RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
 RUN chmod 644   /home/pi/.ssh/authorized_keys
 
+# enable wireguard-config
+RUN systemctl enable wireguard-config.service
+RUN systemctl enable wg-quick@nature40
 
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service
