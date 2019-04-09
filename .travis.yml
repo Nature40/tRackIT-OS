@@ -16,6 +16,6 @@ deploy:
     - Sensorbox.img
   on:
     tags: true
-    repo: nature40/Sensorboxes
+    repo: Nature40/Sensorboxes
   overwrite: true
   prerelease: true
