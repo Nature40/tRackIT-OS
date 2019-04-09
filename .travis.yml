@@ -19,3 +19,4 @@ deploy:
     repo: Nature40/Sensorboxes
   overwrite: true
   prerelease: true
+  skip_cleanup: true
