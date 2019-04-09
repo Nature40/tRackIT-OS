@@ -7,10 +7,10 @@ fi
 
 if [ `uname` == "Darwin" ]; then
     echo "# Unmounting using diskutil"
-    diskutil unmountDisk "$2"
+    diskutil unmountDisk "$2" || exit
 else
     echo "# Unmounting using umount"
-    umount "$2"
+    umount "$2" || exit
 fi
 
 IMG_PROPERTIES=(`ls -l "$1"`)
