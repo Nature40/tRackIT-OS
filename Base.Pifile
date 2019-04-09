@@ -38,6 +38,8 @@ RUN apt-get install -y \
     git \
     libusb-1.0-0-dev
 
+RUN pip3 install --upgrade pip
+
 RUN pip3 install \
     Adafruit_DHT \
     Adafruit_PureIO \
