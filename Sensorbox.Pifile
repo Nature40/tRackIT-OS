@@ -1,17 +1,42 @@
 FROM Base.img
 
+# Set default password
+RUN bash -c 'echo "pi:natur" | chpasswd'
+
+# install config files
+INSTALL Sensorbox/etc /
+INSTALL Sensorbox/boot /
+INSTALL Sensorbox/home /
+
+# Fix permissions on host ssh files
+RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
+RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
+RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
+RUN systemctl disable regenerate_ssh_host_keys
+
+# Install user ssh files and fix permissions
+INSTALL Sensorbox/home/pi/.ssh /home/pi/.ssh
+RUN chown pi:pi /home/pi
+RUN chown pi:pi /home/pi/.ssh
+RUN chown pi:pi /home/pi/.ssh/id_ed25519
+RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
+RUN chown pi:pi /home/pi/.ssh/authorized_keys
+RUN chmod 755   /home/pi
+RUN chmod 700   /home/pi/.ssh
+RUN chmod 600   /home/pi/.ssh/id_ed25519
+RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
+RUN chmod 644   /home/pi/.ssh/authorized_keys
+
+
+# enable hostapd-config script
+RUN systemctl enable hostapd-config.service
+RUN systemctl enable hostapd.service
+
 # install pysensorproxy
 INSTALL pysensorproxy /
 RUN pip3 install -e /pysensorproxy
 INSTALL pysensorproxy/examples/sensorproxy.yml /boot
 INSTALL pysensorproxy/examples/meterings.yml /boot
 
-# install config files
-INSTALL Sensorbox/etc /
-
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
-
-# enable hostapd-config script
-RUN systemctl enable hostapd-config.service
-RUN systemctl enable hostapd.service

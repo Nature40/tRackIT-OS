@@ -1,6 +1,4 @@
 FROM 2018-11-13-raspbian-stretch-lite.img
-TO Base.img
-
 PUMP 100
 
 RUN raspi-config nonint do_serial 0
@@ -15,6 +13,7 @@ RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
 RUN apt-get -y remove fake-hwclock
 RUN update-rc.d -f fake-hwclock remove
 RUN systemctl disable fake-hwclock
+INSTALL Base/lib /
 
 # Disable HDMI out
 RUN bash -c 'sed -i "$ d" /etc/rc.local'
@@ -26,37 +25,8 @@ RUN bash -c 'echo "echo 0 > /sys/class/leds/led0/brightness" >> /etc/rc.local'
 RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
 RUN bash -c 'echo >> /etc/rc.local'
 
-# Set default password
-RUN bash -c 'echo "pi:natur" | chpasswd'
-
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
-
-# Install files in Base folder
-INSTALL Base/home /
-INSTALL Base/lib /
-INSTALL Base/etc /
-
-# Install host ssh files
-INSTALL Base/etc/ssh /etc/ssh
-RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
-RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
-RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
-RUN systemctl disable regenerate_ssh_host_keys
-
-
-# Install user ssh files and fix permissions
-INSTALL Base/home/pi/.ssh /home/pi/.ssh
-RUN chown pi:pi /home/pi
-RUN chown pi:pi /home/pi/.ssh
-RUN chown pi:pi /home/pi/.ssh/id_ed25519
-RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
-RUN chown pi:pi /home/pi/.ssh/authorized_keys
-RUN chmod 755   /home/pi
-RUN chmod 700   /home/pi/.ssh
-RUN chmod 600   /home/pi/.ssh/id_ed25519
-RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
-RUN chmod 644   /home/pi/.ssh/authorized_keys
 
 # Install software
 RUN apt-get update
