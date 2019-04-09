@@ -1,5 +1,7 @@
 # Natur 4.0: Sensorboxes
 
+[![Build Status](https://travis-ci.org/Nature40/Sensorboxes.svg?branch=master)](https://travis-ci.org/Nature40/Sensorboxes)
+
 This repo collects software and hardware descriptions and links used in Natur 4.0 Sensorboxes. It contains distribution definitions (using pimod) and configuration files for sensorboxes.
 
 ## Overview
