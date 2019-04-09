@@ -2,8 +2,9 @@ language: generic
 services: docker
 
 before_install:
-  - git submodule update --init
-  
+  - wget http://director.downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-11-15/2018-11-13-raspbian-stretch-lite.zip
+  - unzip 2018-11-13-raspbian-stretch-lite.zip
+
 script:
   - docker-compose run pimod pimod.sh Base.Pifile
   - docker-compose run pimod pimod.sh Sensorbox.Pifile
