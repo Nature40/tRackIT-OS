@@ -1,6 +1,8 @@
 language: generic
 services: docker
 
+if: tag IS present
+
 before_install:
   - wget http://director.downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-11-15/2018-11-13-raspbian-stretch-lite.zip
   - unzip 2018-11-13-raspbian-stretch-lite.zip
