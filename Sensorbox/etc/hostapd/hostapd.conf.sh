@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 IFACE="wlan0"
-SSID="nature40.liftbox"
+SSID="nature40.sensorbox"
 PASS="BirdsArentReal"
 
 echo "Running RaspberryPi hostapd configuration script..." 1>&2
