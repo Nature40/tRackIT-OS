@@ -41,8 +41,13 @@ RUN systemctl enable hostname-config.service
 # install pysensorproxy
 INSTALL pysensorproxy /
 RUN pip3 install -e /pysensorproxy
-INSTALL pysensorproxy/examples/sensorproxy.yml /boot
-INSTALL pysensorproxy/examples/meterings.yml /boot
+
+# copy example config files
+INSTALL pysensorproxy/examples/sensorproxy.moon.yml /boot
+INSTALL pysensorproxy/examples/meterings.moon.yml /boot
+
+INSTALL pysensorproxy/examples/sensorproxy.planet.yml /boot
+INSTALL pysensorproxy/examples/meterings.planet.yml /boot
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
