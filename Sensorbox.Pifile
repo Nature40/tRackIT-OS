@@ -35,6 +35,9 @@ RUN systemctl enable wg-quick@nature40
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
 
+# enable hostname-config script
+RUN systemctl enable hostname-config.service
+
 # install pysensorproxy
 INSTALL pysensorproxy /
 RUN pip3 install -e /pysensorproxy
