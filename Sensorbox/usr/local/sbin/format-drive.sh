@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 
-DISK="/dev/sdb"
-DEVICE=${DISK}1
+if [ "$EUID" -ne 0 ]; then 
+    echo "Error: This script needs to be run as root."
+    exit 1
+fi
 
-echo "# Creating partition table"
-fdisk $DISK <<EOF
+if [ -z "$1" ]; then
+    echo "usage: $0 <harddisk>"
+    exit 1
+fi
+
+DISK="$1"
+echo "# Creating partition table on ${DISK}..."
+fdisk ${DISK} <<EOF
 g
 n
 1
@@ -13,7 +21,8 @@ n
 w
 EOF
 
-echo "# Creating file system"
-sudo mkfs.ext4 $DEVICE
+PART=${DISK}1
+echo "# Creating file system on ${PART}..."
+echo y | mkfs.ext4 ${PART}
 
-echo "# Done"
+echo "# Done!"

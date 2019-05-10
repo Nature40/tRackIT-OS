@@ -64,3 +64,6 @@ INSTALL pysensorproxy/examples/meterings.planet.yml /boot
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
+
+# add hdd mount to fstab
+RUN bash -c 'echo "/dev/sda1 /data ext4 rw,relatime,data=ordered,auto,nofail 0 0" >> /etc/fstab'
