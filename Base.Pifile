@@ -36,6 +36,7 @@ RUN apt-get install -y \
     i2c-tools \
     vim \
     git \
+    mosh \
     libusb-1.0-0-dev
 
 RUN pip3 install --upgrade pip
