@@ -76,3 +76,7 @@ RUN apt-get install -y raspberrypi-kernel-headers wireguard
 RUN killall -s SIGKILL dirmngr  # stop dirmngr, which blocks some /dev-devices
 RUN sysctl -w net.ipv4.ip_forward=1
 RUN mkdir -p /etc/wireguard
+
+# Energy efficiency
+RUN systemctl disable avahi-daemon
+RUN systemctl disable avahi-daemon.socket

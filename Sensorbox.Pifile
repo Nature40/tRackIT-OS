@@ -67,3 +67,7 @@ RUN systemctl enable sensorproxy.service
 
 # add hdd mount to fstab
 RUN bash -c 'echo "/dev/sda1 /data ext4 rw,relatime,data=ordered,auto,nofail 0 0" >> /etc/fstab'
+
+# set git config for possible local commits
+RUN git config --global user.email "root@nature40-sensorbox"
+RUN git config --global user.name "Nature 4.0 Sensorbox"
