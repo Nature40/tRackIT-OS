@@ -7,6 +7,7 @@ RUN bash -c 'echo "pi:natur" | chpasswd'
 INSTALL Sensorbox/etc /
 INSTALL Sensorbox/boot /
 INSTALL Sensorbox/home /
+INSTALL Sensorbox/usr /
 
 # Fix permissions on host ssh files
 RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
