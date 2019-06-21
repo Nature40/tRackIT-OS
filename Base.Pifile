@@ -1,7 +1,7 @@
 FROM 2018-11-13-raspbian-stretch-lite.img
-PUMP 100
+# PUMP 100
 
-RUN raspi-config nonint do_serial 0
+# RUN raspi-config nonint do_serial 0
 RUN raspi-config nonint do_ssh 0
 RUN raspi-config nonint do_camera 0
 RUN raspi-config nonint do_i2c 0
@@ -14,16 +14,6 @@ RUN apt-get -y remove fake-hwclock
 RUN update-rc.d -f fake-hwclock remove
 RUN systemctl disable fake-hwclock
 INSTALL Base/lib /
-
-# Disable HDMI out
-RUN bash -c 'sed -i "$ d" /etc/rc.local'
-RUN bash -c 'echo "/usr/bin/tvservice -o" >> /etc/rc.local'
-RUN bash -c 'echo >> /etc/rc.local'
-
-# Disable LEDs
-RUN bash -c 'echo "echo 0 > /sys/class/leds/led0/brightness" >> /etc/rc.local'
-RUN bash -c 'echo "echo 0 > /sys/class/leds/led1/brightness" >> /etc/rc.local'
-RUN bash -c 'echo >> /etc/rc.local'
 
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
