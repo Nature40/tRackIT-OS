@@ -54,6 +54,7 @@ RUN systemctl enable hostname-config.service
 
 # install pysensorproxy
 INSTALL pysensorproxy /
+RUN chown -R pi:pi /pysensorproxy
 RUN pip3 install -e /pysensorproxy
 
 # copy example config files
