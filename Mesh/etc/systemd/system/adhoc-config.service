@@ -1,0 +1,12 @@
+[Unit]
+Description=wireguard-config
+After=local-fs.target
+Before=networking.service
+
+[Service]
+ExecStart=/bin/bash -c '/etc/network/interfaces.d/adhoc.sh > /etc/network/interfaces.d/adhoc'
+Type=oneshot
+StandardOutput=journal
+
+[Install]
+RequiredBy=sysinit.target

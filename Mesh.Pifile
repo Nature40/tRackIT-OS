@@ -1,0 +1,53 @@
+FROM Base.img
+
+# Set default password
+RUN bash -c 'echo "pi:natur" | chpasswd'
+
+# install config files
+INSTALL Mesh/etc /
+
+# Fix permissions on host ssh files
+RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
+RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
+RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
+RUN systemctl disable regenerate_ssh_host_keys
+
+# Install user ssh files and fix permissions
+INSTALL Sensorbox/home/pi/.ssh /home/pi/.ssh
+RUN chown pi:pi /home/pi
+RUN chown pi:pi /home/pi/.ssh
+RUN chown pi:pi /home/pi/.ssh/id_ed25519
+RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
+RUN chown pi:pi /home/pi/.ssh/authorized_keys
+RUN chmod 755   /home/pi
+RUN chmod 700   /home/pi/.ssh
+RUN chmod 600   /home/pi/.ssh/id_ed25519
+RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
+RUN chmod 644   /home/pi/.ssh/authorized_keys
+
+# Install root ssh files and fix permissions
+INSTALL Sensorbox/home/pi/.ssh /root/.ssh
+RUN chown root:root /root
+RUN chown root:root /root/.ssh
+RUN chown root:root /root/.ssh/id_ed25519
+RUN chown root:root /root/.ssh/id_ed25519.pub
+RUN chown root:root /root/.ssh/authorized_keys
+RUN chmod 755       /root
+RUN chmod 700       /root/.ssh
+RUN chmod 600       /root/.ssh/id_ed25519
+RUN chmod 644       /root/.ssh/id_ed25519.pub
+RUN chmod 644       /root/.ssh/authorized_keys
+
+# enable wireguard-config
+RUN systemctl enable wireguard-config.service
+RUN systemctl enable wg-quick@nature40
+
+# enable hostname-config script
+RUN systemctl enable hostname-config.service
+
+# enable mesh-config script
+RUN systemctl enable adhoc-config.service
+
+# set git config for possible local commits
+RUN git config --global user.email "root@nature40-sensorbox"
+RUN git config --global user.name "Nature 4.0 Sensorbox"
