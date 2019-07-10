@@ -1,7 +1,7 @@
 FROM 2018-11-13-raspbian-stretch-lite.img
 PUMP 200
 
-# RUN raspi-config nonint do_serial 0
+RUN raspi-config nonint do_serial 0
 RUN raspi-config nonint do_ssh 0
 RUN raspi-config nonint do_camera 0
 RUN raspi-config nonint do_i2c 0
@@ -19,8 +19,11 @@ INSTALL Base/usr /
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
 
-# Install software
+# Upgrade raspbian
 RUN apt-get update
+RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
+
+# Install software
 RUN apt-get install -y \
     python3 python3-pip \
     flac \
@@ -29,16 +32,7 @@ RUN apt-get install -y \
     git \
     mosh \
     libusb-1.0-0-dev
-
 RUN pip3 install --upgrade pip
-
-RUN pip3 install \
-    Adafruit_DHT \
-    Adafruit_PureIO \
-    Adafruit_GPIO \
-    RPi.GPIO \
-    tsl2561 \
-    picamera
 
 # Install uhubctl
 RUN wget https://github.com/mvp/uhubctl/archive/v2.0.0.tar.gz -O uhubctl-2.0.0.tar.gz
@@ -49,20 +43,17 @@ RUN rm -rf uhubctl-2.0.0 uhubctl-2.0.0.tar.gz
 # Install hotspot software
 RUN apt-get install -y dnsmasq hostapd
 
-# Upgrade Dist
-RUN apt-get install -y dirmngr
+# Install wireguard
+RUN apt-get install -y dirmngr raspberrypi-kernel-headers
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC
 RUN bash -c 'echo "deb http://deb.debian.org/debian/ unstable main" | tee -a /etc/apt/sources.list.d/unstable.list'
 RUN bash -c "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | tee -a /etc/apt/preferences.d/limit-unstable"
 RUN apt-get update
-RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade'
-
-# Install wireguard
-RUN apt-get install -y raspberrypi-kernel-headers wireguard
+RUN apt-get install -y wireguard
 RUN killall -s SIGKILL dirmngr  # stop dirmngr, which blocks some /dev-devices
-RUN sysctl -w net.ipv4.ip_forward=1
+RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
 RUN mkdir -p /etc/wireguard
 
 # Install RTL8822BU drivers for all kernel version
