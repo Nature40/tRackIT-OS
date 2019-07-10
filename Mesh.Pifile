@@ -54,3 +54,9 @@ RUN git config --global user.name "Nature 4.0 Sensorbox"
 
 # Install batman-adv
 RUN apt-get install -y batctl
+
+# Enable broadcast pings
+RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
+
+# Enable serial (zero-w debug)
+RUN raspi-config nonint do_serial 0
