@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+
+import logging
+import speedtest
+import subprocess
+
+logging.basicConfig(level=logging.DEBUG)
+
+
+class Route:
+    def __init__(self, row):
+        self.route = row.pop(0)
+        self.download = 0
+        self.upload = 0
+        self.dev = ""
+        self.via = ""
+        self.src = ""
+        self.server = {}
+
+        while len(row) > 1:
+            self.__dict__[row.pop(0)] = row.pop(1)
+
+    @property
+    def speed(self):
+        return self.download + self.upload
+
+    def speedtest(self):
+        test = speedtest.Speedtest(source_address=self.src)
+        test.get_best_server()
+
+        test.download()
+        test.upload()
+        self.__dict__.update(test.results.__dict__)
+
+        logging.info("Speed to {}, {}: {}/{} MBit/s".format(
+            self.server["sponsor"], self.server["name"], mbits(self.download), mbits(self.upload)))
+
+
+def kbits(bits):
+    return int(bits / 1024)
+
+
+def mbits(bits):
+    return int(bits / 1024 / 1024)
+
+
+def call(cmd):
+    logging.info("$ "+" ".join(cmd))
+    return subprocess.call(cmd)
+
+
+if __name__ == "__main__":
+    fastest = None
+    for row in subprocess.check_output(["ip", "route"]).decode().splitlines():
+        gateway = Route(row.split())
+        if gateway.route != "default":
+            continue
+
+        if gateway.dev.startswith("bat"):
+            logging.info("Ignoring mesh gateway via {}...".format(gateway.via))
+            continue
+
+        gateway.speedtest()
+        if (not fastest) or (fastest.speed < gateway.speed):
+            fastest = gateway
+
+    cmd = ["batctl", "gw_mode"]
+    current = subprocess.check_output(cmd).decode().splitlines()[0].split()
+
+    if fastest:
+        logging.info("Gateway seems usable, switching to server mode.")
+        # release dhcp
+        if current[0] == "client":
+            call(["dhclient", "-v", "-r", "bat0"])
+
+        # set initial ip config / iptables rules
+        call(["ifup", "--force", "bat0"])
+
+        # announce server via batctl
+        cmd.append("server")
+        cmd.append("{}/{}".format(kbits(fastest.download), kbits(fastest.upload)))
+        call(cmd)
+
+    elif current[0] == "client":
+        logging.info("Already in client mode, done.")
+    else:
+        logging.info("No gateway present, switching to client mode.")
+
+        cmd.append("client")
+        call(cmd)
+        call(["dhclient", "-v", "bat0"])

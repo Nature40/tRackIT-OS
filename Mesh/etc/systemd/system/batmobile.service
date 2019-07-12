@@ -1,0 +1,7 @@
+[Unit]
+Description=batmobile: batman gateway configurator
+
+[Service]
+ExecStart=/usr/local/sbin/batmobile
+Type=oneshot
+StandardOutput=journal

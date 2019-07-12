@@ -11,6 +11,16 @@ echo "Generating adhoc config..." 1>&2
 echo "Address: $IP" 1>&2
 
 cat <<EOF
+auto eth0
+iface eth0 inet dhcp
+    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+
+auto eth1
+iface eth1 inet dhcp
+    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+
 auto wlan0
 iface wlan0 inet manual
     wireless-channel 1
@@ -23,6 +33,7 @@ iface wlan0 inet manual
 
 auto bat0
 iface bat0 inet static
+    hwaddress ether ${ID:4:2}:${ID:6:2}:${ID:8:2}:${ID:10:2}:${ID:12:2}:${ID:14:2}
     # decrease mtu to cope with batman overhead / raspi zero w limitations
     mtu 1468
     pre-up /usr/sbin/batctl if add wlan0

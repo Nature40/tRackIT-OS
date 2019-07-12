@@ -5,6 +5,7 @@ RUN bash -c 'echo "pi:natur" | chpasswd'
 
 # install config files
 INSTALL Mesh/etc /
+INSTALL Mesh/usr /
 
 # Fix permissions on host ssh files
 RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
@@ -53,10 +54,11 @@ RUN git config --global user.email "root@nature40-sensorbox"
 RUN git config --global user.name "Nature 4.0 Sensorbox"
 
 # Install batman-adv
-RUN apt-get install -y batctl
+RUN apt-get install -y batctl tcpdump python3-pip
+RUN pip3 install speedtest
 
 # Enable broadcast pings
 RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
 
-# Enable serial (zero-w debug)
-RUN raspi-config nonint do_serial 0
+# Enable batmobile timed execution
+RUN systemctl enable batmobile.timer

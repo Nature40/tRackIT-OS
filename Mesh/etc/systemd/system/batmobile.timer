@@ -1,0 +1,9 @@
+[Unit]
+Description=batmobile timer
+
+[Timer]
+OnBootSec=1m
+OnUnitInactiveSec=1h
+
+[Install]
+WantedBy=basic.target
