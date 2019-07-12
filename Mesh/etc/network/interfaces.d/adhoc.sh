@@ -28,8 +28,7 @@ iface wlan0 inet manual
     wireless-mode ad-hoc
     # pre-select cell-id (faster connections)
     wireless-ap 90:43:ef:e0:be:e2
-    address 169.254.$IP3.$IP4
-    netmask 255.255.0.0
+    post-up ifconfig \$IFACE 169.254.$IP3.$IP4/16
 
 auto bat0
 iface bat0 inet static
