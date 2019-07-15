@@ -22,8 +22,3 @@ fi
 
 # disable Ethernet, if no cable is connected
 [ `cat /sys/class/net/eth0/carrier` -eq 0 ] && (echo "Powering off eth0 (not connected)" && uhubctl -p1 -a0)
-
-# dim leds
-echo "Powering off LEDs"
-echo 0 > /sys/class/leds/led0/brightness
-echo 0 > /sys/class/leds/led1/brightness
