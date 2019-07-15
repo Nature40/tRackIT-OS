@@ -14,7 +14,8 @@ for KERNEL in `ls /lib/modules`; do
     mv 8822bu.conf /etc/modprobe.d/.
     chown root:root 8822bu.ko
     chmod 644 8822bu.ko
-    mv 8822bu.ko /lib/modules/$KERNEL/
+    mv 8822bu.ko /lib/modules/$KERNEL/kernel/drivers/net/wireless/
+    depmod $KERNEL
 
     rm install.sh
     rm $TARFILE
