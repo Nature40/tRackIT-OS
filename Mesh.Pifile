@@ -54,8 +54,7 @@ RUN git config --global user.email "root@nature40-sensorbox"
 RUN git config --global user.name "Nature 4.0 Sensorbox"
 
 # Install batman-adv
-RUN apt-get install -y batctl tcpdump python3-pip
-RUN pip3 install speedtest
+RUN apt-get install -y batctl tcpdump
 
 # Enable broadcast pings
 RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"

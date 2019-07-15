@@ -3,7 +3,7 @@ Description=batmobile timer
 
 [Timer]
 OnBootSec=1m
-OnUnitInactiveSec=1h
+OnUnitInactiveSec=12h
 
 [Install]
 WantedBy=basic.target
