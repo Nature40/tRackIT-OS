@@ -1,32 +1,67 @@
+# This image is intended to provide a base layer for various 
+# Sensorboxes configurations. 
+
 FROM 2018-11-13-raspbian-stretch-lite.img
 PUMP 200
-
-RUN raspi-config nonint do_serial 0
-RUN raspi-config nonint do_ssh 0
-RUN raspi-config nonint do_camera 0
-RUN raspi-config nonint do_i2c 0
-
-# Enable the DS3231 RTC
-RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
-
-# remove fake hwclock
-RUN apt-get -y remove fake-hwclock
-RUN update-rc.d -f fake-hwclock remove
-RUN systemctl disable fake-hwclock
-INSTALL Base/lib /
-INSTALL Base/usr /
-
-# Set Europe/Berlin timezone
-RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
 
 # Upgrade raspbian
 RUN apt-get update
 RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
 
-# Install software
+# Set default password
+RUN bash -c 'echo "pi:natur" | chpasswd'
+
+# Allow basic connectivity
+RUN raspi-config nonint do_serial 0
+RUN raspi-config nonint do_ssh 0
+
+# Install configuration files
+INSTALL Base/boot /
+INSTALL Base/etc /
+INSTALL Base/home /
+INSTALL Base/usr /
+
+# Fix permissions on host ssh files
+RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
+RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
+RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
+RUN systemctl disable regenerate_ssh_host_keys
+
+# Install user ssh files and fix permissions
+INSTALL Base/home/pi/.ssh /home/pi/.ssh
+RUN chown pi:pi /home/pi
+RUN chown pi:pi /home/pi/.ssh
+RUN chown pi:pi /home/pi/.ssh/id_ed25519
+RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
+RUN chown pi:pi /home/pi/.ssh/authorized_keys
+RUN chmod 755   /home/pi
+RUN chmod 700   /home/pi/.ssh
+RUN chmod 600   /home/pi/.ssh/id_ed25519
+RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
+RUN chmod 644   /home/pi/.ssh/authorized_keys
+
+# Install root ssh files and fix permissions
+INSTALL Base/home/pi/.ssh /root/.ssh
+RUN chown root:root /root
+RUN chown root:root /root/.ssh
+RUN chown root:root /root/.ssh/id_ed25519
+RUN chown root:root /root/.ssh/id_ed25519.pub
+RUN chown root:root /root/.ssh/authorized_keys
+RUN chmod 755       /root
+RUN chmod 700       /root/.ssh
+RUN chmod 600       /root/.ssh/id_ed25519
+RUN chmod 644       /root/.ssh/id_ed25519.pub
+RUN chmod 644       /root/.ssh/authorized_keys
+
+# Set Europe/Berlin timezone
+RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
+
+# add hdd mount to fstab
+RUN bash -c 'echo "/dev/sda1 /data ext4 rw,relatime,data=ordered,auto,nofail 0 0" >> /etc/fstab'
+
+# Install basic software
 RUN apt-get install -y \
     python3 python3-pip \
-    flac \
     i2c-tools \
     vim \
     git \
@@ -34,14 +69,15 @@ RUN apt-get install -y \
     libusb-1.0-0-dev
 RUN pip3 install --upgrade pip
 
+# set git config for possible local commits
+RUN git config --global user.email "root@nature40-sensorbox"
+RUN git config --global user.name "Nature 4.0 Sensorbox"
+
 # Install uhubctl
 RUN wget https://github.com/mvp/uhubctl/archive/v2.0.0.tar.gz -O uhubctl-2.0.0.tar.gz
 RUN tar xfv uhubctl-2.0.0.tar.gz
 RUN bash -c 'cd uhubctl-2.0.0; make; make install'
 RUN rm -rf uhubctl-2.0.0 uhubctl-2.0.0.tar.gz
-
-# Install hotspot software
-RUN apt-get install -y dnsmasq hostapd
 
 # Install wireguard
 RUN apt-get install -y dirmngr raspberrypi-kernel-headers
@@ -56,9 +92,12 @@ RUN killall -s SIGKILL dirmngr  # stop dirmngr, which blocks some /dev-devices
 RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
 RUN mkdir -p /etc/wireguard
 
+# enable hostname-config script
+RUN systemctl enable hostname-config.service
+
+# enable wireguard-config
+RUN systemctl enable wireguard-config.service
+RUN systemctl enable wg-quick@nature40
+
 # Install RTL8822BU drivers for all kernel version
 RUN install-bu8822.sh
-
-# Energy efficiency
-RUN systemctl disable avahi-daemon
-RUN systemctl disable avahi-daemon.socket
