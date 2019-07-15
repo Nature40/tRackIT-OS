@@ -35,8 +35,9 @@ def _parse_curl(curl_output):
 def speedtest(bind_ip, filename="1MB.zip", url="ftp://speedtest.tele2.net/", upload="upload/speedtest.zip"):
     tmp_path = "speedtest.zip"
 
-    dowm_cmd = ["curl", "-o", tmp_path, "--interface", bind_ip, url+filename]
-    down_p = subprocess.Popen(dowm_cmd, stderr=subprocess.PIPE)
+    down_cmd = ["curl", "-o", tmp_path, "--interface", bind_ip, url+filename]
+    logging.debug(" ".join(down_cmd))
+    down_p = subprocess.Popen(down_cmd, stderr=subprocess.PIPE)
     down_p.wait()
     _, stderr = down_p.communicate()
     down = _parse_curl(stderr)
@@ -44,6 +45,7 @@ def speedtest(bind_ip, filename="1MB.zip", url="ftp://speedtest.tele2.net/", upl
 
 
     up_cmd = ["curl", "-T", tmp_path, url+upload]
+    logging.debug(" ".join(up_cmd))
     up_p = subprocess.Popen(up_cmd, stderr=subprocess.PIPE)
     up_p.wait()
     _, stderr = up_p.communicate()
@@ -101,6 +103,10 @@ if __name__ == "__main__":
             logging.info("Ignoring mesh gateway via {}...".format(gateway.via))
             continue
 
+        if gateway.src == "":
+            logging.info("No src defined for gateway via {}, skipping...")
+            continue
+        
         gateway.speedtest()
         if (not fastest) or (fastest.speed < gateway.speed):
             fastest = gateway
