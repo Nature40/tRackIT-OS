@@ -1,10 +1,58 @@
 #!/usr/bin/env python3
 
 import logging
-import speedtest
 import subprocess
 
 logging.basicConfig(level=logging.DEBUG)
+
+def _curl_to_bps(curlstr):
+    num = curlstr[:-1]
+    suffix = curlstr[-1]
+    try:
+        if suffix == 'k':
+            return float(num) * (1024**1) * 8
+        elif suffix == 'M':
+            return float(num) * (1024**2) * 8
+        elif suffix == 'G':
+            return float(num) * (1024**3) * 8
+        elif suffix == 'T':
+            return float(num) * (1024**4) * 8
+        else:
+            return float(curlstr) * 8
+    except ValueError:
+        return curlstr
+    
+
+def _parse_curl(curl_output):
+    out = curl_output.decode().splitlines()
+    keys = out[0].split()
+
+    vals = [_curl_to_bps(v) for v in out[-1].split()]
+
+    return dict(zip(keys, vals))
+
+
+def speedtest(bind_ip, filename="1MB.zip", url="ftp://speedtest.tele2.net/", upload="upload/speedtest.zip"):
+    tmp_path = "speedtest.zip"
+
+    dowm_cmd = ["curl", "-o", tmp_path, "--interface", bind_ip, url+filename]
+    down_p = subprocess.Popen(dowm_cmd, stderr=subprocess.PIPE)
+    down_p.wait()
+    _, stderr = down_p.communicate()
+    down = _parse_curl(stderr)
+    logging.info("Download finished with {} MBit/s.".format(down['Average']/1024/1024))
+
+
+    up_cmd = ["curl", "-T", tmp_path, url+upload]
+    up_p = subprocess.Popen(up_cmd, stderr=subprocess.PIPE)
+    up_p.wait()
+    _, stderr = up_p.communicate()
+    up = _parse_curl(stderr)
+    logging.info("Upload finished with {} MBit/s.".format(up['Speed']/1024/1024))
+
+    subprocess.check_output(["rm", tmp_path])
+
+    return down['Average'], up['Speed']
 
 
 class Route:
@@ -24,16 +72,9 @@ class Route:
     def speed(self):
         return self.download + self.upload
 
+
     def speedtest(self):
-        test = speedtest.Speedtest(source_address=self.src)
-        test.get_best_server()
-
-        test.download()
-        test.upload()
-        self.__dict__.update(test.results.__dict__)
-
-        logging.info("Speed to {}, {}: {}/{} MBit/s".format(
-            self.server["sponsor"], self.server["name"], mbits(self.download), mbits(self.upload)))
+        self.download, self.upload = speedtest(self.src)
 
 
 def kbits(bits):
