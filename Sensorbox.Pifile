@@ -28,7 +28,7 @@ RUN pip3 install -e /pysensorproxy
 RUN apt-get install -y flac
 
 # copy example config files
-INSTALL pysensorproxy/examples/ /boot
+INSTALL pysensorproxy/examples/ /boot/
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
