@@ -1,0 +1,9 @@
+[Unit]
+Description=Alfred Hostname (65) / IPv4 (66) Information Service
+After=alfred.service
+Requires=alfred.service
+
+[Service]
+ExecStart=/bin/bash -c "hostname | alfred -s 65; hostname -I | alfred -s 66"
+Type=oneshot
+StandardOutput=journal

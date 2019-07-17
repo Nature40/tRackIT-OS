@@ -1,7 +1,7 @@
 FROM Base.img
 
 # Install batman-adv
-RUN apt-get install -y batctl tcpdump dnsmasq
+RUN apt-get install -y batctl tcpdump dnsmasq alfred
 
 # install config files
 INSTALL Mesh/etc /
@@ -15,3 +15,5 @@ RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.co
 
 # Enable batmobile timed execution
 RUN systemctl enable batmobile.timer
+RUN systemctl enable alfred.service
+RUN systemctl enable alfred-info.timer

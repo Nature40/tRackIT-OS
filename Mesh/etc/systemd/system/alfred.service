@@ -1,0 +1,11 @@
+[Unit]
+Description=Alfred - Almighty Lightweight Fact Remote Exchange Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/alfred --master --interface bat0
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

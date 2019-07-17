@@ -1,0 +1,11 @@
+[Unit]
+Description=Alfred Info timer
+After=alfred.service
+Requires=alfred.service
+
+[Timer]
+OnBootSec=1m
+OnUnitInactiveSec=1h
+
+[Install]
+WantedBy=multi-user.target
