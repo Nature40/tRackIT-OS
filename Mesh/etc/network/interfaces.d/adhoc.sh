@@ -11,16 +11,6 @@ echo "Generating adhoc config..." 1>&2
 echo "Address: $IP" 1>&2
 
 cat <<EOF
-auto eth0
-iface eth0 inet dhcp
-    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
-    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
-
-auto eth1
-iface eth1 inet dhcp
-    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
-    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
-
 auto wlan0
 iface wlan0 inet manual
     wireless-channel 1

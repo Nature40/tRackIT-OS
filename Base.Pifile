@@ -57,7 +57,7 @@ RUN chmod 644       /root/.ssh/authorized_keys
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
 
 # add hdd mount to fstab
-RUN bash -c 'echo "/dev/sda1 /data ext4 rw,relatime,data=ordered,auto,nofail 0 0" >> /etc/fstab'
+RUN bash -c 'echo "/dev/sda1 /data ext4 defaults,auto,nofail 0 0" >> /etc/fstab'
 
 # Install basic software
 RUN apt-get install -y \
