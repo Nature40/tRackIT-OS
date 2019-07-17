@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IFACE="wlan0"
+IFACE="wlan1"
 SSID="nature40-sensorbox"
 PASS="BirdsArentReal"
 
@@ -27,11 +27,12 @@ wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 auth_algs=1
 
-hw_mode=g
+hw_mode=a
 ieee80211n=1
 require_ht=1
+ieee80211ac=1
 
-channel=1
+channel=36
 country_code=DE
 
 ctrl_interface=/var/run/hostapd

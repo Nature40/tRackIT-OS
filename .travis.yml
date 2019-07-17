@@ -9,6 +9,7 @@ before_install:
 
 script:
   - docker-compose run pimod pimod.sh Base.Pifile
+  - docker-compose run pimod pimod.sh Mesh.Pifile
   - docker-compose run pimod pimod.sh Sensorbox.Pifile
   
 deploy:

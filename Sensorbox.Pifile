@@ -1,4 +1,4 @@
-FROM Base.img
+FROM Mesh.img
 
 # Enable hardware interaction 
 RUN raspi-config nonint do_camera 0
@@ -22,9 +22,9 @@ RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
 
 # install pysensorproxy and dependencies
-INSTALL pysensorproxy /
-RUN chown -R pi:pi /pysensorproxy
-RUN pip3 install -e /pysensorproxy
+INSTALL pysensorproxy /home/pi/
+RUN chown -R pi:pi /home/pi/pysensorproxy
+RUN pip3 install -e /home/pi/pysensorproxy
 RUN apt-get install -y flac
 
 # copy example config files
