@@ -19,6 +19,8 @@ iface wlan0 inet manual
     # pre-select cell-id (faster connections)
     wireless-ap 90:43:ef:e0:be:e2
     post-up ifconfig \$IFACE 169.254.$IP3.$IP4/16
+    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
 
 auto bat0
 iface bat0 inet static
@@ -28,6 +30,8 @@ iface bat0 inet static
     pre-up /usr/sbin/batctl if add wlan0
     address 10.254.$IP3.$IP4
     netmask 255.255.0.0
+    post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
+    post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
 EOF
 
 echo "Done." 1>&2
