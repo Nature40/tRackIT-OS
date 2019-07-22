@@ -5,7 +5,7 @@ Requires=alfred.service
 
 [Timer]
 OnBootSec=1m
-OnUnitInactiveSec=1h
+OnUnitInactiveSec=5m
 
 [Install]
 WantedBy=multi-user.target
