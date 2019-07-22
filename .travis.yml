@@ -11,13 +11,17 @@ script:
   - docker-compose run pimod pimod.sh Base.Pifile
   - docker-compose run pimod pimod.sh Mesh.Pifile
   - docker-compose run pimod pimod.sh Sensorbox.Pifile
+  - docker-compose run pimod pimod.sh Connector.Pifile
+  - zip Sensorbox.zip Sensorbox.img
+  - zip Connector.zip Connector.img
   
 deploy:
   provider: releases
   api_key:
     secure: PvfCUO2O92cPTP0KoTDQRdpkEKIv9jULtCp2oztfrppCqR8xLpRZm/yMbpiuKPd5ai4YVZvHAcDQWEgJAF2DqKa/uBClISC+ZnQkYS30lHExgDP4m4u4lRoGgDy3f7dkmGwjkdWKDnMiOoU1aseFohmEVfeBP+hbVC3cpAEdzszLv/cyH1RpvzWgm1usp8uwf+9/EN1svrN7hPJO1xl/hkrA4NmruhAO6piVGMRhhZY4zNmNNNPATcNM3j05S48IM4WRck8f19rJ/dqTysBCjkJUKCDSqzqMpiif4KVvbBoDXR2YRYTNooriJkW9m07zI2+klKxj4Tuq0U/0Ue8Z1eyZ9VHO5cvPvo8bBPUOGToDpPWQxmyHxXjXjNPn0IL+7/+A/ITsCO2Y9Xkdl59qohww1+HU/HmDOv+MGNJFSmnPYMqXgFPdDrnjae0DHBz21Xqccjh2PD0TQrtYDloJXYNZFa+4s21RSsXrLCZKfYCe8TXU9oYZcS2CYMcK7svb6gupftgKAN/7GPJeWE1jQ3zKBPJPOkKNV0t3AvgFuhXTa+RsJqKbOwbs1gW8xyNm20gnIY+oo92B5sYHp/L7O5w4tlOYNARd751iy9ZvtZqmzQwd/zzysCaTbotxoQb1hguDex91zK6F+GYUxGksqJB0dwIoKN/t314dA5KrwQ4=
   file:
-    - Sensorbox.img
+    - Sensorbox.zip
+    - Connector.zip
   on:
     tags: true
     repo: Nature40/Sensorboxes-Images
