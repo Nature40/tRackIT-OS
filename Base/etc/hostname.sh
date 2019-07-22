@@ -24,4 +24,7 @@ ff02::2		ip6-allrouters
 127.0.1.1	$HOSTNAME
 EOF
 
+echo "Appending /boot/hosts" 1>&2
+cat /boot/hosts >> /etc/hosts
+
 echo "Done." 1>&2
