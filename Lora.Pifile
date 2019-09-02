@@ -1,0 +1,26 @@
+# This image installs some LoRa software for the
+# Dragion LoRa RPi HAT
+FROM Mesh.img
+
+# Upgrade raspbian
+RUN apt-get update
+RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
+
+# Allow SPI connectivity to LoRa HAT
+RUN raspi-config nonint do_spi 0
+RUN bash -c 'echo "dtoverlay=spi0-cs,cs0_pin=25" >> /boot/config.txt'
+
+# Install pySX127X
+RUN pip3 install RPi.GPIO spidev
+RUN git clone https://github.com/mayeranalytics/pySX127x.git /home/pi/pySX127x
+
+# Install bcm2835 library
+RUN wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz
+RUN tar zxvf bcm2835-1.60.tar.gz
+RUN rm bcm2835-1.60.tar.gz
+RUN bash -c "cd bcm2835-1.60 && ./configure && make && make install"
+
+# Install pyRadioHeadRF98
+RUN pip3 install cffi
+RUN git clone https://github.com/exmorse/pyRadioHeadRF95.git
+RUN bash -c "cd pyRadioHeadRF95 && make"
