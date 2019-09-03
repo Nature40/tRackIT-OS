@@ -4,23 +4,31 @@ FROM Mesh.img
 
 # Upgrade raspbian
 RUN apt-get update
-RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
 
-# Allow SPI connectivity to LoRa HAT
+# Allow SPI connectivity to Dragino LoRa HAT
 RUN raspi-config nonint do_spi 0
+# Remap SPI CS according to https://github.com/mayeranalytics/pySX127x/issues/21
 RUN bash -c 'echo "dtoverlay=spi0-cs,cs0_pin=25" >> /boot/config.txt'
 
 # Install pySX127X
-RUN pip3 install RPi.GPIO spidev
-RUN git clone https://github.com/mayeranalytics/pySX127x.git /home/pi/pySX127x
+RUN apt-get install -y rpi.gpio python-spidev python3-spidev
+RUN git clone https://github.com/Nature40/pySX127x.git /home/pi/pySX127x
+RUN bash -c 'cd /home/pi/pySX127x && git checkout dragino_rpi3'
 
 # Install bcm2835 library
 RUN wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.60.tar.gz
-RUN tar zxvf bcm2835-1.60.tar.gz
+RUN tar zxvf bcm2835-1.60.tar.gz -C /home/pi
 RUN rm bcm2835-1.60.tar.gz
-RUN bash -c "cd bcm2835-1.60 && ./configure && make && make install"
+RUN bash -c "cd /home/pi/bcm2835-1.60 && ./configure && make && make install"
 
 # Install pyRadioHeadRF98
-RUN pip3 install cffi
-RUN git clone https://github.com/exmorse/pyRadioHeadRF95.git
-RUN bash -c "cd pyRadioHeadRF95 && make"
+RUN apt-get install -y python-cffi python3-cffi
+RUN git clone https://github.com/exmorse/pyRadioHeadRF95.git /home/pi/pyRadioHeadRF95
+RUN bash -c "cd /home/pi/pyRadioHeadRF95 && make"
+
+# Install gpsd
+RUN apt-get install -y gpsd gpsd-clients
+RUN systemctl disable serial-getty@ttyS0.service
+
+# Install config
+INSTALL Lora/etc /
