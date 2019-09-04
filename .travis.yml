@@ -12,6 +12,7 @@ script:
   - docker-compose run pimod pimod.sh Mesh.Pifile
   - docker-compose run pimod pimod.sh Sensorbox.Pifile
   - docker-compose run pimod pimod.sh Connector.Pifile
+  - docker-compose run pimod pimod.sh Lora.Pifile
   - zip Sensorbox.zip Sensorbox.img
   - zip Connector.zip Connector.img
   - zip Lora.zip Lora.img
