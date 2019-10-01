@@ -1,7 +1,7 @@
 # This image installs some LoRa software for the
 # Dragion LoRa RPi HAT
 FROM Mesh.img
-PUMP 100
+PUMP 200
 
 # Upgrade raspbian
 RUN apt-get update
