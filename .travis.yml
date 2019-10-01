@@ -1,5 +1,6 @@
 language: generic
 services: docker
+dist: bionic
 
 if: tag IS present
 
