@@ -2,7 +2,7 @@
 # Sensorboxes configurations. 
 
 FROM 2019-07-10-raspbian-buster-lite.img
-PUMP 200
+PUMP 400
 
 # Upgrade raspbian
 RUN apt-get update

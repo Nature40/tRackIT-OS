@@ -1,5 +1,4 @@
 FROM Mesh.img
-PUMP 100
 
 # Enable hardware interaction 
 RUN raspi-config nonint do_camera 0
