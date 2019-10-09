@@ -19,11 +19,11 @@ before_install:
   - sudo sed -i '/^Defaults\tsecure_path.*$/ d' /etc/sudoers
 
 script:
-  - sudo bash -x pimod.sh Base.Pifile
-  - sudo bash -x pimod.sh Mesh.Pifile
-  - sudo bash -x pimod.sh Sensorbox.Pifile
-  - sudo bash -x pimod.sh Connector.Pifile
-  - sudo bash -x pimod.sh Lora.Pifile
+  - sudo pimod.sh Base.Pifile
+  - sudo pimod.sh Mesh.Pifile
+  - sudo pimod.sh Sensorbox.Pifile
+  - sudo pimod.sh Connector.Pifile
+  - sudo pimod.sh Lora.Pifile
   - zip Sensorbox.zip Sensorbox.img
   - zip Connector.zip Connector.img
   - zip Lora.zip Lora.img
