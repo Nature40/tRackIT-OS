@@ -1,19 +1,29 @@
 language: generic
-services: docker
 dist: bionic
 
+addons:
+  apt:
+    packages:
+    - kpartx 
+    - qemu
+    - qemu-user-static
+    - binfmt-support
+    - parted
+    
 if: tag IS present
 
 before_install:
   - wget http://director.downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
   - unzip 2019-07-10-raspbian-buster-lite.zip
+  - export PATH="${TRAVIS_BUILD_DIR}/pimod:${PATH}"
+  - sudo sed -i '/^Defaults\tsecure_path.*$/ d' /etc/sudoers
 
 script:
-  - docker-compose run pimod pimod.sh Base.Pifile
-  - docker-compose run pimod pimod.sh Mesh.Pifile
-  - docker-compose run pimod pimod.sh Sensorbox.Pifile
-  - docker-compose run pimod pimod.sh Connector.Pifile
-  - docker-compose run pimod pimod.sh Lora.Pifile
+  - sudo bash -x pimod.sh Base.Pifile
+  - sudo bash -x pimod.sh Mesh.Pifile
+  - sudo bash -x pimod.sh Sensorbox.Pifile
+  - sudo bash -x pimod.sh Connector.Pifile
+  - sudo bash -x pimod.sh Lora.Pifile
   - zip Sensorbox.zip Sensorbox.img
   - zip Connector.zip Connector.img
   - zip Lora.zip Lora.img
