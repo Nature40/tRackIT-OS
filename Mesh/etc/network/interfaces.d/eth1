@@ -1,0 +1,4 @@
+allow-hotplug eth1
+iface eth1 inet dhcp
+    post-up   iptables --table nat --append POSTROUTING --out-interface $IFACE --jump MASQUERADE
+    post-down iptables --table nat --delete POSTROUTING --out-interface $IFACE --jump MASQUERADE

@@ -10,4 +10,4 @@ Type=oneshot
 StandardOutput=journal
 
 [Install]
-RequiredBy=sysinit.target
+RequiredBy=network.target

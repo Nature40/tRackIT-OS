@@ -1,0 +1,19 @@
+FROM Base.img
+
+# Install batman-adv
+RUN apt-get install -y batctl tcpdump dnsmasq alfred
+
+# install config files
+INSTALL Mesh/etc /
+INSTALL Mesh/usr /
+
+# enable mesh-config script
+RUN systemctl enable adhoc-config.service
+
+# Enable broadcast pings
+RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
+
+# Enable batmobile timed execution
+RUN systemctl enable batmobile.timer
+RUN systemctl enable alfred.service
+RUN systemctl enable alfred-info.timer

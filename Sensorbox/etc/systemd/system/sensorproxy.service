@@ -5,6 +5,7 @@ After=network.target
 [Service]
 ExecStart=/usr/local/bin/sensorproxy -vvv --config /boot/sensorproxy.yml --metering /boot/meterings.yml
 Restart=always
+RestartSec=30s
 
 [Install]
 WantedBy=multi-user.target

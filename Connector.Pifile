@@ -1,0 +1,10 @@
+FROM Mesh.img
+
+# Install hotspot software
+RUN apt-get install -y hostapd bridge-utils
+
+# install config files
+INSTALL Connector/etc /
+
+# enable hostapd script
+RUN systemctl enable hostapd.service

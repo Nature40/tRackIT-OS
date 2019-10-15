@@ -1,69 +1,34 @@
-FROM Base.img
+FROM Mesh.img
 
-# Set default password
-RUN bash -c 'echo "pi:natur" | chpasswd'
+# Enable hardware interaction 
+RUN raspi-config nonint do_camera 0
+RUN raspi-config nonint do_i2c 0
+
+# Enable the DS3231 RTC / remove fake hwclock
+RUN bash -c 'echo dtoverlay=i2c-rtc,ds3231 >> /boot/config.txt'
+RUN apt-get -y remove fake-hwclock
+RUN update-rc.d -f fake-hwclock remove
+RUN systemctl disable fake-hwclock
+
+# Install hotspot software
+RUN apt-get install -y dnsmasq hostapd
 
 # install config files
 INSTALL Sensorbox/etc /
-INSTALL Sensorbox/boot /
-INSTALL Sensorbox/home /
-
-# Fix permissions on host ssh files
-RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
-RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
-RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
-RUN systemctl disable regenerate_ssh_host_keys
-
-# Install user ssh files and fix permissions
-INSTALL Sensorbox/home/pi/.ssh /home/pi/.ssh
-RUN chown pi:pi /home/pi
-RUN chown pi:pi /home/pi/.ssh
-RUN chown pi:pi /home/pi/.ssh/id_ed25519
-RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
-RUN chown pi:pi /home/pi/.ssh/authorized_keys
-RUN chmod 755   /home/pi
-RUN chmod 700   /home/pi/.ssh
-RUN chmod 600   /home/pi/.ssh/id_ed25519
-RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
-RUN chmod 644   /home/pi/.ssh/authorized_keys
-
-# Install root ssh files and fix permissions
-INSTALL Sensorbox/home/pi/.ssh /root/.ssh
-RUN chown root:root /root
-RUN chown root:root /root/.ssh
-RUN chown root:root /root/.ssh/id_ed25519
-RUN chown root:root /root/.ssh/id_ed25519.pub
-RUN chown root:root /root/.ssh/authorized_keys
-RUN chmod 755       /root
-RUN chmod 700       /root/.ssh
-RUN chmod 600       /root/.ssh/id_ed25519
-RUN chmod 644       /root/.ssh/id_ed25519.pub
-RUN chmod 644       /root/.ssh/authorized_keys
-
-# enable wireguard-config
-RUN systemctl enable wireguard-config.service
-RUN systemctl enable wg-quick@nature40
+INSTALL Sensorbox/lib /
 
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
 
-# enable hostname-config script
-RUN systemctl enable hostname-config.service
-
-# install pysensorproxy
-INSTALL pysensorproxy /
-RUN pip3 install -e /pysensorproxy
+# install pysensorproxy and dependencies
+INSTALL pysensorproxy /home/pi/
+RUN chown -R pi:pi /home/pi/pysensorproxy
+RUN pip3 install -e /home/pi/pysensorproxy
+RUN apt-get install -y flac
 
 # copy example config files
-INSTALL pysensorproxy/examples/ /boot
+INSTALL pysensorproxy/examples/ /boot/
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
-
-# add hdd mount to fstab
-RUN bash -c 'echo "/dev/sda1 /data ext4 rw,relatime,data=ordered,auto,nofail 0 0" >> /etc/fstab'
-
-# set git config for possible local commits
-RUN git config --global user.email "root@nature40-sensorbox"
-RUN git config --global user.name "Nature 4.0 Sensorbox"
