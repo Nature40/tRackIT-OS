@@ -60,12 +60,10 @@ git submodule update --init --recursive
 wget http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
 unzip 2019-07-10-raspbian-buster-lite.zip
 
-# build the Base and Sensorbox image
+# build the Base, Mesh and Sensorbox image
 docker-compose run pimod pimod.sh Base.Pifile
+docker-compose run pimod pimod.sh Mesh.Pifile
 docker-compose run pimod pimod.sh Sensorbox.Pifile
-
-# alternative: using the provided makefile
-make Sensorbox.img
 ```
 
 ```bash
