@@ -32,3 +32,4 @@ INSTALL pysensorproxy/examples/ /boot/
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
+RUN systemctl enable sensorproxy-log.service

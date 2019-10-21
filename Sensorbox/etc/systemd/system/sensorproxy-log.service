@@ -1,0 +1,11 @@
+[Unit]
+Description=Sensorproxy Log
+After=sensorproxy.service
+
+[Service]
+ExecStart=/bin/sh -c 'mkdir -p /data; journalctl --no-tail -fu sensorproxy >> /data/`date +%%Y-%%m-%%dT%%H%%M%%S`_sensorproxy.txt'
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target
