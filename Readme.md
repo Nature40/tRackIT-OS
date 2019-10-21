@@ -18,6 +18,16 @@ To setup an installation one has to install the prepared images to the devices a
 
 More details can be found in [pysensorproxy Readme](https://github.com/nature40/pysensorproxy).
 
+## Network Auto Configuration
+
+The IP addresses are autoconfigured using a set of scripts ([Wi-Fi](https://github.com/Nature40/Sensorboxes-Images/blob/master/Mesh/etc/network/interfaces.d/adhoc.sh), [Wireguard](https://github.com/Nature40/Sensorboxes-Images/blob/097da475bb3748acea959cec190717a0ae4b5ee1/Base/etc/wireguard/nature40.conf.sh)) run at bootup. The prefixes are assigned statically, while the dynamic part is computed using the Rasperry Pi Serial number. 
+
+  - Ad-hoc Wi-Fi Network: 169.254.X.X
+  - B.A.T.M.A.N Mesh: 10.254.X.X
+  - Wireguard: 172.16.X.X
+ 
+An IP adress list used for Nature 4.0 [can be found here (private)](https://github.com/Nature40/Sensorboxes-Config/blob/master/hosts).
+
 ## Useful commands
 
 ##### pysensorproxy daemon control
