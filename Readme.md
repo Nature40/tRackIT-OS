@@ -57,8 +57,8 @@ A distribution can be build by using pimod. This tutorial will use the provided 
 git submodule update --init --recursive
 
 # download the required raspbian image
-wget http://director.downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-11-15/2018-11-13-raspbian-stretch-lite.zip
-unzip 2018-11-13-raspbian-stretch-lite.zip
+wget http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
+unzip 2019-07-10-raspbian-buster-lite.zip
 
 # build the Base and Sensorbox image
 docker-compose run pimod pimod.sh Base.Pifile
