@@ -1,6 +1,6 @@
 [Unit]
 Description=wireguard-config
-After=local-fs.target
+After=hostname-config.service
 Before=networking.service
 
 [Service]
