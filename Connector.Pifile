@@ -1,4 +1,5 @@
 FROM Mesh.img
+RUN apt-get update
 
 # Install hotspot software
 RUN apt-get install -y hostapd bridge-utils

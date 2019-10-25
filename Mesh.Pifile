@@ -1,4 +1,5 @@
 FROM Base.img
+RUN apt-get update
 
 # Install batman-adv
 RUN apt-get install -y batctl tcpdump dnsmasq alfred
