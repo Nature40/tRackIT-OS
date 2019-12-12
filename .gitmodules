@@ -4,3 +4,12 @@
 [submodule "pysensorproxy"]
 	path = pysensorproxy
 	url = https://github.com/Nature40/pysensorproxy.git
+[submodule "RadioTracking/home/pi/rtl-sdr"]
+	path = RadioTracking/home/pi/rtl-sdr
+	url = git://git.osmocom.org/rtl-sdr.git
+[submodule "RadioTracking/home/pi/rtl-power-fftw"]
+	path = RadioTracking/home/pi/rtl-power-fftw
+	url = https://github.com/AD-Vega/rtl-power-fftw.git
+[submodule "RadioTracking/home/pi/liquid-dsp"]
+	path = RadioTracking/home/pi/liquid-dsp
+	url = https://github.com/jgaeddert/liquid-dsp.git

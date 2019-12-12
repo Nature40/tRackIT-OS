@@ -1,0 +1,55 @@
+FROM Mesh.img
+PUMP 200M
+
+RUN apt-get update
+INSTALL RadioTracking /
+
+RUN apt-get install -y --no-install-recommends\
+    build-essential \
+    cmake \
+    pkg-config \
+    ca-certificates \
+    sox \
+    socat \
+    libusb-1.0-0-dev \
+    libsox-fmt-mp3 \
+    libfftw3-dev \
+    libtclap-dev
+
+RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
+
+# Install rtl-sdr
+RUN apt-get install -y autotools-dev autoconf automake default-libmysqlclient-dev
+
+RUN bash <<EOF
+cd /home/pi/liquid-dsp
+./bootstrap.sh
+./configure
+make
+make install
+ldconfig
+EOF
+
+RUN bash <<EOF
+mkdir -p /home/pi/rtl-sdr/build
+cd /home/pi/rtl-sdr/build
+
+cmake ../ -DINSTALL_UDEV_RULES=ON -DDETACH_KERNEL_DRIVER=ON
+make
+make install
+ldconfig
+EOF
+
+# Install rtl-power-fftw
+RUN bash <<EOF
+mkdir /home/pi/rtl-power-fftw/build
+cd /home/pi/rtl-power-fftw/build
+cmake ../
+make
+make install 
+EOF
+
+RUN bash <<EOF
+    cd /home/pi
+    gcc -g -O2  -ffast-math -mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4 -Wall -fPIC rtlsdr_signal_detect.c /usr/local/lib/libliquid.a -o rtlsdr_signal_detect -lfftw3f -lm -lc \`mysql_config --cflags --libs\`
+EOF
