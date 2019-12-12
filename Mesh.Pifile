@@ -5,8 +5,7 @@ RUN apt-get update
 RUN apt-get install -y batctl tcpdump dnsmasq alfred
 
 # install config files
-INSTALL Mesh/etc /
-INSTALL Mesh/usr /
+INSTALL Mesh /
 
 # enable mesh-config script
 RUN systemctl enable adhoc-config.service

@@ -2,7 +2,7 @@
 # Sensorboxes configurations. 
 
 FROM 2019-07-10-raspbian-buster-lite.img
-PUMP 400
+PUMP 400M
 
 # Upgrade raspbian
 RUN apt-get update
@@ -16,10 +16,7 @@ RUN raspi-config nonint do_serial 0
 RUN raspi-config nonint do_ssh 0
 
 # Install configuration files
-INSTALL Base/boot /
-INSTALL Base/etc /
-INSTALL Base/home /
-INSTALL Base/usr /
+INSTALL Base /
 
 # Fix permissions on host ssh files
 RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'

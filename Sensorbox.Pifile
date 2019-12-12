@@ -15,21 +15,17 @@ RUN systemctl disable fake-hwclock
 RUN apt-get install -y dnsmasq hostapd
 
 # install config files
-INSTALL Sensorbox/etc /
-INSTALL Sensorbox/lib /
+INSTALL Sensorbox/ /
 
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
 
 # install pysensorproxy and dependencies
-INSTALL pysensorproxy /home/pi/
+INSTALL pysensorproxy /home/pi/pysensorproxy
 RUN chown -R pi:pi /home/pi/pysensorproxy
 RUN pip3 install -e /home/pi/pysensorproxy
 RUN apt-get install -y flac
-
-# copy example config files
-INSTALL pysensorproxy/examples/ /boot/
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
