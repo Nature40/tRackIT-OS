@@ -22,7 +22,7 @@ script:
   - sudo pimod.sh Base.Pifile
   - sudo pimod.sh Mesh.Pifile
   - sudo pimod.sh Sensorbox.Pifile
-  - sudi pimod.sh RadioTracking.Pifile
+  - sudo pimod.sh RadioTracking.Pifile
   - zip Sensorbox.zip Sensorbox.img
   - zip RadioTracking.zip RadioTracking.Pifile
   
