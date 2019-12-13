@@ -5,7 +5,7 @@ After=network.target
 [Service]
 ExecStart=/home/pi/signal_detect.sh %I
 Restart=always
-RestartSec=30s
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target
