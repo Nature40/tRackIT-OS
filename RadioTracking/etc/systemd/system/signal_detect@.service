@@ -1,0 +1,12 @@
+[Unit]
+Description=Detect signals of bats
+After=network.target
+
+[Service]
+ExecStart=/home/pi/signal_detect.sh %I
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target
+
