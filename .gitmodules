@@ -15,4 +15,4 @@
 	url = https://github.com/jgaeddert/liquid-dsp.git
 [submodule "RadioTracking/home/pi/rtlsdr_signal_detect"]
 	path = RadioTracking/home/pi/rtlsdr_signal_detect
-	url = git@github.com:Nature40/rtlsdr_signal_detect.git
+	url = https://github.com/Nature40/rtlsdr_signal_detect.git
