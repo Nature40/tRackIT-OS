@@ -55,8 +55,7 @@ RUN bash <<EOF
     make install
 EOF
 
-RUN systemctl enable signal_detect@0
-RUN systemctl enable signal_detect@1
-RUN systemctl enable signal_detect@2
-RUN systemctl enable signal_detect@3
-
+RUN systemctl enable signal_detect@red
+RUN systemctl enable signal_detect@yellow
+RUN systemctl enable signal_detect@green
+RUN systemctl enable signal_detect@blue
