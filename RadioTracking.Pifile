@@ -1,5 +1,5 @@
 FROM Mesh.img
-PUMP 200M
+PUMP 500M
 
 RUN apt-get update
 INSTALL RadioTracking /
@@ -19,7 +19,12 @@ RUN apt-get install -y --no-install-recommends\
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 
 # Install rtl-sdr
-RUN apt-get install -y autotools-dev autoconf automake default-libmysqlclient-dev
+RUN apt-get install -y \
+    autotools-dev \
+    autoconf \
+    automake \
+    default-libmysqlclient-dev \
+    mariadb-server
 
 RUN bash <<EOF
     cd /home/pi/liquid-dsp
@@ -59,3 +64,19 @@ RUN systemctl enable signal_detect@red
 RUN systemctl enable signal_detect@yellow
 RUN systemctl enable signal_detect@green
 RUN systemctl enable signal_detect@blue
+
+RUN mysql <<EOF
+UPDATE mysql.user SET Password=PASSWORD('natur') WHERE User='root';
+DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+
+CREATE USER 'rteu'@'localhost' IDENTIFIED BY 'rteu';
+GRANT INSERT ON * . * TO 'rteu'@'localhost';
+
+CREATE DATABASE rteu;
+CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FLOAT, signal_freq FLOAT, signal_bw FLOAT, max_signal FLOAT, noise FLOAT, run FLOAT);
+
+FLUSH PRIVILEGES;
+EOF
