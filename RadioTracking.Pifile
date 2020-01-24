@@ -65,6 +65,7 @@ RUN systemctl enable signal_detect@yellow
 RUN systemctl enable signal_detect@green
 RUN systemctl enable signal_detect@blue
 
+RUN service mysql start
 RUN mysql <<EOF
 UPDATE mysql.user SET Password=PASSWORD('natur') WHERE User='root';
 DELETE FROM mysql.user WHERE User='';
@@ -80,3 +81,4 @@ CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FL
 
 FLUSH PRIVILEGES;
 EOF
+RUN service mysql stop
