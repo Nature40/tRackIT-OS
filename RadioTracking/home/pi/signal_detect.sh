@@ -42,5 +42,5 @@ KEEPALIVE=${KEEPALIVE}
 EOF
 
 # run actual detection
-rtl_sdr -d ${1} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} - 2> ${OUTFILE} | \
-	rtlsdr_signal_detect --sql --db_user rteu --db_pass rteu -s -t ${THRESHOLD} -r ${SAMPLERATE} -b ${FFT_BINS} -n ${FFT_SAMPLES} --ll ${DURATION_MIN} --lu ${DURATION_MAX} -k ${KEEPALIVE} >> ${OUTFILE} 2>&1
+rtl_sdr -d ${1} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} - | \
+	rtlsdr_signal_detect --sql -s -t ${THRESHOLD} -r ${SAMPLERATE} -b ${FFT_BINS} -n ${FFT_SAMPLES} --ll ${DURATION_MIN} --lu ${DURATION_MAX} -k ${KEEPALIVE} >> ${OUTFILE}
