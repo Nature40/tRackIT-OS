@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 ExecStartPre=/bin/sh -c "mkdir -p /data/`hostname`/log/"
-ExecStart=/bin/sh -c "exec journalctl -fu %I --lines=all --boot > /data/`hostname`/log/`date +%%Y-%%m-%%dT%%H%%M%%S`_%I.log"
+ExecStart=/bin/sh -c "exec journalctl -fu %I --lines=all --boot > /data/`hostname`/log/`date +%%Y-%%m-%%dT%%H%%M%%S`_%I.txt"
 Restart=always
 RestartSec=10s
 

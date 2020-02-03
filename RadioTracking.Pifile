@@ -91,7 +91,3 @@ CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FL
 FLUSH PRIVILEGES;
 EOF
 RUN service mysql stop
-
-RUN pip3 install sysdweb
-RUN systemctl enable sysdweb
-RUN systemctl enable logdump@sysdweb

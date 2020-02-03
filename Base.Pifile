@@ -97,3 +97,11 @@ RUN systemctl enable wg-quick@nature40
 
 # Install RTL8822BU drivers for all kernel version
 RUN install-bu8822.sh
+
+# Install and enable gatling
+RUN apt-get install -y gatling
+RUN systemctl enable gatling
+
+# Install and enable sysdweb
+RUN pip3 install sysdweb
+RUN systemctl enable sysdweb
