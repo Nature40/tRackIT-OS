@@ -1,6 +1,6 @@
 [Unit]
 Description=Detect signals of bats
-After=network.target
+After=network.target mysql.service time-sync.target
 
 [Service]
 ExecStart=/home/pi/signal_detect.sh %I
