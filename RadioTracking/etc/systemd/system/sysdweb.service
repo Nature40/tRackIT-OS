@@ -1,0 +1,12 @@
+[Unit]
+Description=Control systemd services through Web or REST API
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/sysdweb
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+
