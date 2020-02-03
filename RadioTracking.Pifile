@@ -60,11 +60,19 @@ RUN bash <<EOF
     make install
 EOF
 
+# Enable RadioTracking services
 RUN systemctl enable mariadb
 RUN systemctl enable signal_detect@red
 RUN systemctl enable signal_detect@yellow
 RUN systemctl enable signal_detect@green
 RUN systemctl enable signal_detect@blue
+
+# Enable logdump services
+RUN systemctl enable logdump@mariadb
+RUN systemctl enable logdump@signal_detect@red
+RUN systemctl enable logdump@signal_detect@yellow
+RUN systemctl enable logdump@signal_detect@green
+RUN systemctl enable logdump@signal_detect@blue
 
 RUN service mysql start
 RUN mysql <<EOF
@@ -86,3 +94,4 @@ RUN service mysql stop
 
 RUN pip3 install sysdweb
 RUN systemctl enable sysdweb
+RUN systemctl enable logdump@sysdweb
