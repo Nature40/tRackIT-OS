@@ -1,4 +1,4 @@
-FROM Mesh.img
+FROM Sensorbox.img
 PUMP 500M
 
 RUN apt-get update
@@ -74,6 +74,31 @@ RUN systemctl enable logdump@signal_detect@yellow
 RUN systemctl enable logdump@signal_detect@green
 RUN systemctl enable logdump@signal_detect@blue
 
+# Enable sysdweb managing
+RUN tee -a /etc/sysdweb.conf <<EOF
+
+[mariadb]
+title = MariaDB
+unit = mariadb
+
+[signal_detect@red]
+title = Radio Tracking: Red Antenna
+unit = signal_detect@red
+
+[signal_detect@yellow]
+title = Radio Tracking: Yellow Antenna
+unit = signal_detect@yellow
+
+[signal_detect@green]
+title = Radio Tracking: Green Antenna
+unit = signal_detect@green
+
+[signal_detect@blue]
+title = Radio Tracking: Blue Antenna
+unit = signal_detect@blue
+EOF
+
+# Initialized database
 RUN service mysql start
 RUN mysql <<EOF
 UPDATE mysql.user SET Password=PASSWORD('natur') WHERE User='root';
@@ -91,3 +116,7 @@ CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FL
 FLUSH PRIVILEGES;
 EOF
 RUN service mysql stop
+
+# Copy sensorproxy default monitoring
+INSTALL pysensorproxy/examples/basic/sensorproxy.yml /boot
+INSTALL pysensorproxy/examples/basic/meterings.yml /boot

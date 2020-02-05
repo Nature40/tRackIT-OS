@@ -1,4 +1,6 @@
 FROM Mesh.img
+PUMP 100M
+
 RUN apt-get update
 
 # Enable hardware interaction 
@@ -29,4 +31,9 @@ RUN apt-get install -y flac
 
 # enable sensorproxy
 RUN systemctl enable sensorproxy.service
-RUN systemctl enable sensorproxy-log.service
+RUN systemctl enable logdump@sensorproxy
+RUN tee -a /etc/sysdweb.conf <<EOF
+[sensorproxy]
+title = SensorProxy
+unit = sensorproxy
+EOF
