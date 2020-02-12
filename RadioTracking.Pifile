@@ -101,15 +101,24 @@ EOF
 # Initialized database
 RUN service mysql start
 RUN mysql <<EOF
+# configure secure root user
 UPDATE mysql.user SET Password=PASSWORD('natur') WHERE User='root';
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+
+# remove test databases
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 
+# create local user for insertion
 CREATE USER 'rteu'@'localhost' IDENTIFIED BY 'rteu';
-GRANT INSERT ON * . * TO 'rteu'@'localhost';
+GRANT INSERT ON rteu . * TO 'rteu'@'localhost';
 
+# create remote user
+CREATE USER 'researcher'@'%' IDENTIFIED BY 'supersicher';
+GRANT SELECT ON rteu . * TO 'researcher'@'%';
+
+# initialize rteu database
 CREATE DATABASE rteu;
 CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FLOAT, signal_freq FLOAT, signal_bw FLOAT, max_signal FLOAT, noise FLOAT, run FLOAT);
 
