@@ -111,16 +111,13 @@ DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 
 # create local user for insertion
-CREATE USER 'rteu'@'localhost' IDENTIFIED BY 'rteu';
-GRANT INSERT ON rteu . * TO 'rteu'@'localhost';
+CREATE USER rteu@localhost IDENTIFIED BY rteu;
+GRANT CREATE ON rteu . * TO rteu@localhost;
+GRANT INSERT ON rteu . * TO rteu@localhost;
 
 # create remote user
-CREATE USER 'researcher'@'%' IDENTIFIED BY 'supersicher';
-GRANT SELECT ON rteu . * TO 'researcher'@'%';
-
-# initialize rteu database
-CREATE DATABASE rteu;
-CREATE TABLE IF NOT EXISTS rteu.signals(timestamp DATE, samples INT, duration FLOAT, signal_freq FLOAT, signal_bw FLOAT, max_signal FLOAT, noise FLOAT, run FLOAT);
+CREATE USER researcher@% IDENTIFIED BY supersicher;
+GRANT SELECT ON rteu . * TO researcher@%;
 
 FLUSH PRIVILEGES;
 EOF
