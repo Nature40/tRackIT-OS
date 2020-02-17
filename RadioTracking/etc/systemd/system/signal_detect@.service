@@ -2,6 +2,9 @@
 Description=Detect signals of bats
 After=network.target mysql.service time-sync.target
 
+StartLimitIntervalSec=300
+StartLimitAction=reboot
+
 [Service]
 ExecStart=/home/pi/signal_detect.sh %I
 Restart=always
