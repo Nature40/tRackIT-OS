@@ -108,16 +108,16 @@ DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.
 
 # remove test databases
 DROP DATABASE IF EXISTS test;
-DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+DELETE FROM mysql.db WHERE db='test' OR db='test\\_%';
 
 # create local user for insertion
-CREATE USER rteu@localhost IDENTIFIED BY rteu;
-GRANT CREATE ON rteu . * TO rteu@localhost;
-GRANT INSERT ON rteu . * TO rteu@localhost;
+CREATE USER IF NOT EXISTS rteu@localhost IDENTIFIED BY 'rteu';
+GRANT CREATE ON rteu.* TO rteu@localhost;
+GRANT INSERT ON rteu.* TO rteu@localhost;
 
 # create remote user
-CREATE USER researcher@% IDENTIFIED BY supersicher;
-GRANT SELECT ON rteu . * TO researcher@%;
+CREATE USER IF NOT EXISTS pi@'%' IDENTIFIED BY 'natur';
+GRANT SELECT ON rteu.* TO pi@'%';
 
 FLUSH PRIVILEGES;
 EOF
