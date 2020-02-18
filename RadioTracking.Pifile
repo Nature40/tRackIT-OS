@@ -78,24 +78,25 @@ RUN systemctl enable logdump@signal_detect@blue
 RUN tee -a /etc/sysdweb.conf <<EOF
 
 [mariadb]
-title = MariaDB
+title = MariaDB Database
 unit = mariadb
 
-[signal_detect@red]
-title = Radio Tracking: Red Antenna
-unit = signal_detect@red
+[signal_detect@blue]
+title = Radio Tracking: Blue Antenna (0°)
+unit = signal_detect@blue
 
 [signal_detect@yellow]
-title = Radio Tracking: Yellow Antenna
+title = Radio Tracking: Yellow Antenna (90°)
 unit = signal_detect@yellow
 
+[signal_detect@red]
+title = Radio Tracking: Red Antenna (180°)
+unit = signal_detect@red
+
 [signal_detect@green]
-title = Radio Tracking: Green Antenna
+title = Radio Tracking: Green Antenna (270°)
 unit = signal_detect@green
 
-[signal_detect@blue]
-title = Radio Tracking: Blue Antenna
-unit = signal_detect@blue
 EOF
 
 # Initialized database
