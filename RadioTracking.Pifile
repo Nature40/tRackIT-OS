@@ -124,11 +124,11 @@ EOF
 RUN service mysql stop
 
 # Listen on all interfaces (mariadb)
-RUN sudo sed -i 's/bind-address.*=.*127.0.0.1/bind-address = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf 
+RUN sed -i 's/bind-address.*=.*127.0.0.1/bind-address = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy sensorproxy default monitoring
 INSTALL pysensorproxy/examples/basic/sensorproxy.yml /boot
 INSTALL pysensorproxy/examples/basic/meterings.yml /boot
 
-# Enabling wait for time-sync.target (no service will start before the clock is synced)
-sudo systemctl enable systemd-time-wait-sync.service
+# Enabling wait for time-sync.target (depending services will not start before the clock is synced)
+RUN systemctl enable systemd-time-wait-sync.service

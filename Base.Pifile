@@ -92,7 +92,7 @@ RUN mkdir -p /etc/wireguard
 RUN systemctl enable hostname-config.service
 
 # enable wireguard-config
-RUN systemctl enable wireguard-config.service
+RUN ln -s /boot/wireguard.conf /etc/wireguard/nature40.conf
 RUN systemctl enable wg-quick@nature40
 
 # Install RTL8822BU drivers for all kernel version
