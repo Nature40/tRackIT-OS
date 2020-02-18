@@ -36,4 +36,5 @@ RUN tee -a /etc/sysdweb.conf <<EOF
 [sensorproxy]
 title = SensorProxy
 unit = sensorproxy
+
 EOF
