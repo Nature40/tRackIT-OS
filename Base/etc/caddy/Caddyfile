@@ -1,0 +1,10 @@
+:80 {
+    root /data/
+    gzip
+    
+    browse
+    proxy /sysdweb localhost:10080 {
+        without /sysdweb
+        transparent
+    }
+}

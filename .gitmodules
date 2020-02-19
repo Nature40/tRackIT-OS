@@ -16,3 +16,6 @@
 [submodule "RadioTracking/home/pi/rtlsdr_signal_detect"]
 	path = RadioTracking/home/pi/rtlsdr_signal_detect
 	url = https://github.com/Nature40/rtlsdr_signal_detect.git
+[submodule "Base/home/pi/sysdweb"]
+	path = Base/home/pi/sysdweb
+	url = https://github.com/Nature40/sysdweb
