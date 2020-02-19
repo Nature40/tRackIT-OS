@@ -101,8 +101,13 @@ RUN install-bu8822.sh
 # Install and enable caddy
 RUN curl https://getcaddy.com -o /tmp/getcaddy.sh
 RUN bash /tmp/getcaddy.sh personal
+RUN systemctl enable caddy
 
 # Install and enable sysdweb
 RUN chown -R pi:pi /home/pi/
 RUN pip3 install -e /home/pi/sysdweb
 RUN systemctl enable sysdweb
+
+# Create symlinks for other webserver targets
+RUN ln -s . /data/sysdweb
+RUN ln -s /boot/ /data/boot
