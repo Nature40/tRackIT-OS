@@ -4,7 +4,7 @@ PIMOD=docker-compose run pimod pimod.sh
 all: Sensorbox.img RadioTracking.img
 
 clean:
-	rm Base.img Mesh.img Sensorbox.img RadioTracking.img
+	rm -f Base.img Mesh.img Sensorbox.img RadioTracking.img
 
 Base.img: 			Base.Pifile 		Base
 	${PIMOD} Base.Pifile
