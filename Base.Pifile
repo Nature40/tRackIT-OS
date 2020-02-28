@@ -109,5 +109,6 @@ RUN pip3 install -e /home/pi/sysdweb
 RUN systemctl enable sysdweb
 
 # Create symlinks for other webserver targets
+RUN mkdir /data
 RUN ln -s . /data/sysdweb
 RUN ln -s /boot/ /data/boot
