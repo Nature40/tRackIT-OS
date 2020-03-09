@@ -1,0 +1,3 @@
+INPLACE $IMG
+RUN bash
+

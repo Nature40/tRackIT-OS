@@ -10,3 +10,4 @@ services:
     working_dir: /sensorboxes
     environment:
       - PATH:'$PATH:/pimod'
+      - IMG
