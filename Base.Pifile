@@ -1,7 +1,7 @@
 # This image is intended to provide a base layer for various 
 # Sensorboxes configurations. 
 
-FROM 2019-07-10-raspbian-buster-lite.img
+FROM http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
 PUMP 400M
 
 # Upgrade raspbian
@@ -71,10 +71,7 @@ RUN git config --global user.email "root@nature40-sensorbox"
 RUN git config --global user.name "Nature 4.0 Sensorbox"
 
 # Install uhubctl
-RUN wget https://github.com/mvp/uhubctl/archive/v2.0.0.tar.gz -O uhubctl-2.0.0.tar.gz
-RUN tar xfv uhubctl-2.0.0.tar.gz
-RUN bash -c 'cd uhubctl-2.0.0; make; make install'
-RUN rm -rf uhubctl-2.0.0 uhubctl-2.0.0.tar.gz
+RUN bash -c 'cd /home/pi/uhubctl; make; make install'
 
 # Install wireguard
 RUN apt-get install -y dirmngr raspberrypi-kernel-headers

@@ -19,3 +19,6 @@
 [submodule "Base/home/pi/sysdweb"]
 	path = Base/home/pi/sysdweb
 	url = https://github.com/Nature40/sysdweb
+[submodule "Base/home/pi/uhubctl"]
+	path = Base/home/pi/uhubctl
+	url = https://github.com/mvp/uhubctl
