@@ -16,5 +16,47 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y binfmt-support file kpartx lsof parted qemu qemu-user-static unzip p7zip-full wget xz-utils
+
       - name: Building Base.img
         run: sudo pimod/pimod.sh Base.Pifile
+      - name: Building Mesh.img
+        run: sudo pimod/pimod.sh Mesh.Pifile
+      - name: Building Sensorbox.img
+        run: sudo pimod/pimod.sh Sensorbox.Pifile
+      - name: Building RadioTracking.img
+        run: sudo pimod/pimod.sh RadioTracking.Pifile
+
+      - name: Package RadioTracking.zip
+        run: zip RadioTracking.zip RadioTracking.img
+      - name: Package Sensorbox.zip
+        run: zip Sensorbox.zip Sensorbox.img
+      # - name: Create GitHub release
+      #   id: create_release
+      #   uses: actions/create-release@v1.0.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: true
+      # - name: Upload Sensorbox.zip to release
+      #   id: upload_release_asset
+      #   uses: actions/upload-release-asset@v1.0.1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: Sensorbox.zip
+      #     asset_name: Sensorbox.zip
+      #     asset_content_type: application/zip
+      # - name: Upload RadioTracking.zip to release
+      #   id: upload_release_asset
+      #   uses: actions/upload-release-asset@v1.0.1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: RadioTracking.zip
+      #     asset_name: RadioTracking.zip
+      #     asset_content_type: application/zip
