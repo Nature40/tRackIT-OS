@@ -22,3 +22,6 @@
 [submodule "Base/home/pi/uhubctl"]
 	path = Base/home/pi/uhubctl
 	url = https://github.com/mvp/uhubctl
+[submodule "Sensorbox/usr/src/snd-i2s_rpi-0.0.2"]
+	path = Sensorbox/usr/src/snd-i2s_rpi-0.0.2
+	url = https://github.com/opencardev/snd-i2s_rpi
