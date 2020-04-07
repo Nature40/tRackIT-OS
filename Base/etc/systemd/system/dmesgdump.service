@@ -1,0 +1,12 @@
+[Unit]
+Description=Dump dmesg logs since boot
+After=network.target
+
+[Service]
+ExecStartPre=/bin/sh -c "mkdir -p /data/`hostname`/log/"
+ExecStart=/bin/sh -c "exec dmesg -w > /data/`hostname`/log/`date +%%Y-%%m-%%dT%%H%%M%%S`_dmesg.txt"
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

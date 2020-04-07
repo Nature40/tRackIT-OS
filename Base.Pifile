@@ -109,3 +109,6 @@ RUN systemctl enable sysdweb
 RUN mkdir /data
 RUN ln -s . /data/sysdweb
 RUN ln -s /boot/ /data/boot
+
+# Dump dmesg to disk
+RUN systemctl enable dmesgdump
