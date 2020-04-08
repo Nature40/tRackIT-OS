@@ -136,3 +136,6 @@ INSTALL pysensorproxy/examples/basic/meterings.yml /boot
 
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
+
+# Enable signal_detect_restart timer
+systemctl enable signal_detect_restart.timer

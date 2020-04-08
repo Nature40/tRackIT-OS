@@ -6,7 +6,6 @@ import ping3
 import math
 
 logging.basicConfig(level=logging.DEBUG)
-ping3.EXCEPTIONS = True
 
 def _curl_to_bps(curlstr):
     num = curlstr[:-1]
@@ -87,7 +86,7 @@ class Route:
         self.download, self.upload = speedtest(self.src)
 
     def pingtest(self):
-        self.latency = pingtest(self.src)
+        self.latency = pingtest(self.src)[-1]
 
 
 def kbits(bits):

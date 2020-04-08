@@ -94,7 +94,19 @@ DB_RUN_ID=`mysql --skip-column-names --batch -e "INSERT INTO rteu.runs (center_f
 	VALUE(${FREQUENCY}, ${SAMPLERATE}, ${GAIN}, ${THRESHOLD}, ${FFT_BINS}, ${FFT_SAMPLES}, ${DURATION_MIN}, ${DURATION_MAX}, ${KEEPALIVE}, '${HOSTNAME}', '${DEVICE}', ${POS_X}, ${POS_Y}, ${ORIENTATION});
 	SELECT LAST_INSERT_ID();"`
 
+# reenable failure resilience
+set +e +o pipefail
+
 # run actual detection
 echo "# Starting detection (run ${DB_RUN_ID})..."
 rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} - | \
+	rtlsdr_fcu 30s | \
 	rtlsdr_signal_detect --sql --db_run_id ${DB_RUN_ID} -s -t ${THRESHOLD} -r ${SAMPLERATE} -b ${FFT_BINS} -n ${FFT_SAMPLES} --ll ${DURATION_MIN} --lu ${DURATION_MAX} -k ${KEEPALIVE} >> ${OUTFILE}
+
+# if a process finishes (and isn't killed), restart all services
+echo "# Restarting all signal_detect instances in 10 seconds"
+sleep 10
+systemctl restart signal_detect@*
+
+# keep script running, such that it doesn't get restart twice
+sleep 10

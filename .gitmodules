@@ -25,3 +25,6 @@
 [submodule "Sensorbox/usr/src/snd-i2s_rpi-0.0.2"]
 	path = Sensorbox/usr/src/snd-i2s_rpi-0.0.2
 	url = https://github.com/opencardev/snd-i2s_rpi
+[submodule "RadioTracking/home/pi/rtlsdr_fcu"]
+	path = RadioTracking/home/pi/rtlsdr_fcu
+	url = git@github.com:Nature40/rtlsdr_fcu.git
