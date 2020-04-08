@@ -2,7 +2,8 @@ FROM Base.img
 RUN apt-get update
 
 # Install batman-adv
-RUN apt-get install -y batctl tcpdump dnsmasq alfred
+RUN apt-get install -y batctl tcpdump dnsmasq alfred python3-pip
+RUN pip3 install ping3
 
 # install config files
 INSTALL Mesh /
