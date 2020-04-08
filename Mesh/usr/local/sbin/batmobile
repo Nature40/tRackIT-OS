@@ -2,8 +2,11 @@
 
 import logging
 import subprocess
+import ping3
+import math
 
 logging.basicConfig(level=logging.DEBUG)
+ping3.EXCEPTIONS = True
 
 def _curl_to_bps(curlstr):
     num = curlstr[:-1]
@@ -56,12 +59,17 @@ def speedtest(bind_ip, filename="1MB.zip", url="ftp://speedtest.tele2.net/", upl
 
     return down['Average'], up['Speed']
 
+def pingtest(bind_ip, dest="ds.mathematik.uni-marburg.de", count=4):
+    ping_result = [ping3.ping(dest, src_addr=bind_ip) for _ in range(count)]
+    return ping_result
+
 
 class Route:
     def __init__(self, row):
         self.route = row.pop(0)
-        self.download = 0
-        self.upload = 0
+        self.download = 64 * 1024
+        self.upload = 64 * 1024
+        self.latency = math.inf
         self.dev = ""
         self.via = ""
         self.src = ""
@@ -77,6 +85,9 @@ class Route:
 
     def speedtest(self):
         self.download, self.upload = speedtest(self.src)
+
+    def pingtest(self):
+        self.latency = pingtest(self.src)
 
 
 def kbits(bits):
@@ -104,11 +115,11 @@ if __name__ == "__main__":
             continue
 
         if gateway.src == "":
-            logging.info("No src defined for gateway via {}, skipping...")
+            logging.info("No src defined for gateway via {}, skipping...".format(gateway.via))
             continue
         
-        gateway.speedtest()
-        if (not fastest) or (fastest.speed < gateway.speed):
+        gateway.pingtest()
+        if (not fastest) or (fastest.latency > gateway.latency):
             fastest = gateway
 
     cmd = ["batctl", "gw_mode"]
