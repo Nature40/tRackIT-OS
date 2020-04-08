@@ -138,4 +138,12 @@ INSTALL pysensorproxy/examples/basic/meterings.yml /boot
 RUN systemctl enable systemd-time-wait-sync.service
 
 # Enable signal_detect_restart timer
-systemctl enable signal_detect_restart.timer
+RUN systemctl enable signal_detect_restart.timer
+
+# Compile and install rtlsdr_fcu
+HOST bash <<EOF
+    cd RadioTracking/home/pi/rtlsdr_fcu/
+    GOOS=linux GOARCH=arm GOARM=7 go build
+EOF
+
+INSTALL RadioTracking/home/pi/rtlsdr_fcu/rtlsdr_fcu /usr/local/bin/
