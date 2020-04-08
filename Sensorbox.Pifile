@@ -45,5 +45,3 @@ RUN tee -a /etc/modules <<<"snd-bcm2835"
 
 # Add i2s sound dkms modules
 RUN dkms add -m snd-i2s_rpi -v 0.0.2
-RUN dkms build -m snd-i2s_rpi -v 0.0.2
-RUN dkms install -m snd-i2s_rpi -v 0.0.2
