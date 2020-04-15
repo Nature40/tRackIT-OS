@@ -24,8 +24,8 @@ echo "# Loading config file ${CONFIGFILE}..."
 source "${CONFIGFILE}"
 
 # test if device is available
-echo "# Testing hardware availability..."
-rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} -n1 /dev/null
+echo "# Testing hardware availability, 10s timeout..."
+timeout 10 rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} -n1 /dev/null
 
 # generate output paths
 BASEFILE="/data/`hostname`/rtlsdr_signal_detect/`date +"%Y-%m-%dT%H%M%S"`"
