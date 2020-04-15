@@ -54,16 +54,16 @@ ORIENTATION_OFFSET=${ORIENTATION_OFFSET}
 EOF
 
 case "${DEVICE}" in
-"blue")
+"blue" | "0" )
 	ORIENTATION=`awk '{print $1 + 0}' <<<"${ORIENTATION_OFFSET}"`
     ;;
-"yellow")
+"yellow" | "1" )
 	ORIENTATION=`awk '{print $1 + 90}' <<<"${ORIENTATION_OFFSET}"`
     ;;
-"red")
+"red" | "2" )
 	ORIENTATION=`awk '{print $1 + 180}' <<<"${ORIENTATION_OFFSET}"`
     ;;
-"green")
+"green" | "3" )
 	ORIENTATION=`awk '{print $1 + 270}' <<<"${ORIENTATION_OFFSET}"`
     ;;
 esac
