@@ -62,17 +62,11 @@ EOF
 
 # Enable RadioTracking services
 RUN systemctl enable mariadb
-RUN systemctl enable signal_detect@red
-RUN systemctl enable signal_detect@yellow
-RUN systemctl enable signal_detect@green
-RUN systemctl enable signal_detect@blue
+RUN systemctl enable signal_detect
 
 # Enable logdump services
 RUN systemctl enable logdump@mariadb
-RUN systemctl enable logdump@signal_detect@red
-RUN systemctl enable logdump@signal_detect@yellow
-RUN systemctl enable logdump@signal_detect@green
-RUN systemctl enable logdump@signal_detect@blue
+RUN systemctl enable logdump@signal_detect
 
 # Enable sysdweb managing
 RUN tee -a /etc/sysdweb.conf <<EOF
@@ -81,22 +75,9 @@ RUN tee -a /etc/sysdweb.conf <<EOF
 title = MariaDB Database
 unit = mariadb
 
-[signal_detect@blue]
-title = Radio Tracking: Blue Antenna (0°)
-unit = signal_detect@blue
-
-[signal_detect@yellow]
-title = Radio Tracking: Yellow Antenna (90°)
-unit = signal_detect@yellow
-
-[signal_detect@red]
-title = Radio Tracking: Red Antenna (180°)
-unit = signal_detect@red
-
-[signal_detect@green]
-title = Radio Tracking: Green Antenna (270°)
-unit = signal_detect@green
-
+[signal_detect]
+title = Radio Tracking
+unit = signal_detect
 EOF
 
 # Initialized database

@@ -2,8 +2,6 @@
 
 set -euf -o pipefail
 
-DEVICE=${1}
-
 # default config
 FREQUENCY=150100001
 SAMPLERATE=250000
@@ -17,22 +15,27 @@ KEEPALIVE=300
 POS_X=0.0
 POS_Y=0.0
 ORIENTATION_OFFSET=0
+DEVICE_COUNT=4
 
 # additional configuration
 CONFIGFILE="/boot/rtlsdr_signal_detect.conf"
 echo "# Loading config file ${CONFIGFILE}..."
 source "${CONFIGFILE}"
 
-# test if device is available
-echo "# Testing hardware availability, 10s timeout..."
-timeout 10 rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} -n1 /dev/null
+# testing number of available devices
+echo "# Testing number of available devices..."
+DEVICE_LOG=`rtl_sdr -n1 /dev/null 2>&1 || echo "Found 0 device(s)"`
+DEVICES_ONLINE=`grep -m 1 -o [0-9] <<<${DEVICE_LOG}`
 
-# generate output paths
+if [[ ${DEVICES_ONLINE} < ${DEVICE_COUNT} ]]; then 
+    echo "# Error: Only ${DEVICES_ONLINE} of ${DEVICE_COUNT} devices are online. Hint:"
+    head -n-10 <<<${DEVICE_LOG} 
+    exit 1
+fi
+
+# Generating output paths / filenames
 BASEFILE="/data/`hostname`/rtlsdr_signal_detect/`date +"%Y-%m-%dT%H%M%S"`"
 METAFILE="${BASEFILE}.conf"
-OUTFILE="${BASEFILE}_${DEVICE}.csv"
-
-# create output folder
 echo "# Creating output folder ${BASEFILE}..."
 mkdir -p `dirname ${BASEFILE}`
 
@@ -51,22 +54,8 @@ KEEPALIVE=${KEEPALIVE}
 POS_X=${POS_X}
 POS_Y=${POS_Y}
 ORIENTATION_OFFSET=${ORIENTATION_OFFSET}
+DEVICE_COUNT=${DEVICE_COUNT}
 EOF
-
-case "${DEVICE}" in
-"blue" | "0" )
-	ORIENTATION=`awk '{print $1 + 0}' <<<"${ORIENTATION_OFFSET}"`
-    ;;
-"yellow" | "1" )
-	ORIENTATION=`awk '{print $1 + 90}' <<<"${ORIENTATION_OFFSET}"`
-    ;;
-"red" | "2" )
-	ORIENTATION=`awk '{print $1 + 180}' <<<"${ORIENTATION_OFFSET}"`
-    ;;
-"green" | "3" )
-	ORIENTATION=`awk '{print $1 + 270}' <<<"${ORIENTATION_OFFSET}"`
-    ;;
-esac
 
 echo "# Creating run database and tables..."
 mysql -e "CREATE DATABASE IF NOT EXISTS rteu;"
@@ -89,24 +78,52 @@ mysql -e "CREATE TABLE IF NOT EXISTS rteu.runs (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=latin1;"
 
-echo "# Inserting run into table..."
-DB_RUN_ID=`mysql --skip-column-names --batch -e "INSERT INTO rteu.runs (center_freq, samplerate, gain, threshold, fft_bins, fft_samples, duration_min, duration_max, keepalive, hostname, device, pos_x, pos_y, orientation)
-	VALUE(${FREQUENCY}, ${SAMPLERATE}, ${GAIN}, ${THRESHOLD}, ${FFT_BINS}, ${FFT_SAMPLES}, ${DURATION_MIN}, ${DURATION_MAX}, ${KEEPALIVE}, '${HOSTNAME}', '${DEVICE}', ${POS_X}, ${POS_Y}, ${ORIENTATION});
-	SELECT LAST_INSERT_ID();"`
+# testing device availability to have (almost) concurrent logger startup 
+# for DEVICE in `seq 0 $((DEVICE_COUNT-1))`; do 
+#     echo "# Testing device ${DEVICE} availability, 10s timeout..."
+#     timeout 10 rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} -n1 /dev/null
+# done
 
-# reenable failure resilience
-set +e +o pipefail
+PIDS=""
 
-# run actual detection
-echo "# Starting detection (run ${DB_RUN_ID})..."
-rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} - | \
-	rtlsdr_fcu 30s | \
-	rtlsdr_signal_detect --sql --db_run_id ${DB_RUN_ID} -s -t ${THRESHOLD} -r ${SAMPLERATE} -b ${FFT_BINS} -n ${FFT_SAMPLES} --ll ${DURATION_MIN} --lu ${DURATION_MAX} -k ${KEEPALIVE} >> ${OUTFILE}
+for DEVICE in `seq 0 $((DEVICE_COUNT-1))`; do 
+    # generate output paths
+    OUTFILE="${BASEFILE}_${DEVICE}.csv"
 
-# if a process finishes (and isn't killed), restart all services
-echo "# Restarting all signal_detect instances in 10 seconds"
-sleep 10
-systemctl restart signal_detect@*
+    case "${DEVICE}" in
+    0 )
+        ORIENTATION=`awk '{print $1 + 0}' <<<"${ORIENTATION_OFFSET}"`
+        ;;
+    1 )
+        ORIENTATION=`awk '{print $1 + 90}' <<<"${ORIENTATION_OFFSET}"`
+        ;;
+    2 )
+        ORIENTATION=`awk '{print $1 + 180}' <<<"${ORIENTATION_OFFSET}"`
+        ;;
+    3 )
+        ORIENTATION=`awk '{print $1 + 270}' <<<"${ORIENTATION_OFFSET}"`
+        ;;
+    esac
 
-# keep script running, such that it doesn't get restart twice
-sleep 10
+    echo "# Inserting run into table..."
+    DB_RUN_ID=`mysql --skip-column-names --batch -e "INSERT INTO rteu.runs (center_freq, samplerate, gain, threshold, fft_bins, fft_samples, duration_min, duration_max, keepalive, hostname, device, pos_x, pos_y, orientation)
+        VALUE(${FREQUENCY}, ${SAMPLERATE}, ${GAIN}, ${THRESHOLD}, ${FFT_BINS}, ${FFT_SAMPLES}, ${DURATION_MIN}, ${DURATION_MAX}, ${KEEPALIVE}, '${HOSTNAME}', '${DEVICE}', ${POS_X}, ${POS_Y}, ${ORIENTATION});
+        SELECT LAST_INSERT_ID();"`
+
+    # run actual detection
+    echo "# Starting detection (device ${DEVICE}, run ${DB_RUN_ID})..."
+    rtl_sdr -d ${DEVICE} -f ${FREQUENCY} -s ${SAMPLERATE} -g ${GAIN} - | \
+        rtlsdr_fcu 30s | \
+        rtlsdr_signal_detect --sql --db_run_id ${DB_RUN_ID} -s -t ${THRESHOLD} -r ${SAMPLERATE} -b ${FFT_BINS} -n ${FFT_SAMPLES} --ll ${DURATION_MIN} --lu ${DURATION_MAX} -k ${KEEPALIVE} >> ${OUTFILE} &
+
+    PIDS+=" $!"
+done
+
+# allow loggers to start
+sleep 5
+
+# wait until at least one logger fails
+echo "# Signal detection running (pids:${PIDS})"
+
+# kill all subprocesses
+wait -n ${PIDS} || pkill -P $$

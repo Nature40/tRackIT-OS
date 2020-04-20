@@ -3,4 +3,4 @@ Description=signal_detect restart
 
 [Service]
 Type=oneshot
-ExecStart=/bin/systemctl restart signal_detect@*
+ExecStart=/bin/systemctl restart signal_detect
