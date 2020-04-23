@@ -18,6 +18,13 @@ echo "$IFACE: $SSID / $PASS" 1>&2
 cat <<EOF
 interface=$IFACE
 ssid=$SSID
+wpa_passphrase=BirdsArentReal
+
+wpa=2
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+auth_algs=1
 
 hw_mode=g
 ieee80211n=1
