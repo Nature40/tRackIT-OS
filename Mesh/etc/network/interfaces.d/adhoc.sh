@@ -19,6 +19,7 @@ iface wlan0 inet manual
     # pre-select cell-id (faster connections)
     wireless-ap 90:43:ef:e0:be:e2
     post-up ifconfig \$IFACE 169.254.$IP3.$IP4/16
+    post-up ifconfig \$IFACE:0 169.254.0.1/16
     post-up   iptables --table nat --append POSTROUTING --out-interface \$IFACE --jump MASQUERADE
     post-down iptables --table nat --delete POSTROUTING --out-interface \$IFACE --jump MASQUERADE
 
