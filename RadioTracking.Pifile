@@ -122,7 +122,6 @@ RUN systemctl enable systemd-time-wait-sync.service
 RUN systemctl enable signal_detect_restart.timer
 
 # Compile and install rtlsdr_fcu
-HOST apt-get install -y golang git
 HOST bash <<EOF
     cd RadioTracking/home/pi/rtlsdr_fcu/
     GOOS=linux GOARCH=arm GOARM=7 go build
