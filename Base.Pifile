@@ -6,12 +6,32 @@ PUMP 400M
 
 # Upgrade raspbian
 RUN apt-get update
-RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
+
+# Install basic software
+RUN apt-get install -y \
+    python3 python3-pip \
+    i2c-tools \
+    vim \
+    git \
+    mosh \
+    libusb-1.0-0-dev
+
+RUN pip3 install --upgrade pip
+
+# Install networking tools
+RUN apt-get install -y \
+    batctl \
+    tcpdump \
+    hostapd \
+    dnsmasq \
+    alfred \
+    bridge-utils
+RUN pip3 install ping3
 
 # Set default password
 RUN bash -c 'echo "pi:natur" | chpasswd'
 
-# Allow basic connectivity
+# Allow basic connectivity (0 == success status code - enable)
 RUN raspi-config nonint do_serial 0
 RUN raspi-config nonint do_ssh 0
 
@@ -55,16 +75,6 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # add hdd mount to fstab
 RUN bash -c 'echo "/dev/sda1 /data ext4 defaults,auto,nofail 0 0" >> /etc/fstab'
-
-# Install basic software
-RUN apt-get install -y \
-    python3 python3-pip \
-    i2c-tools \
-    vim \
-    git \
-    mosh \
-    libusb-1.0-0-dev
-RUN pip3 install --upgrade pip
 
 # set git config for possible local commits
 RUN git config --global user.email "root@nature40-sensorbox"
@@ -112,3 +122,18 @@ RUN ln -s /boot/ /data/boot
 
 # Dump dmesg to disk
 RUN systemctl enable dmesgdump
+
+# enable mesh-config script
+RUN systemctl enable adhoc-config.service
+
+# Enable broadcast pings
+RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
+
+# Enable batmobile timed execution
+RUN systemctl enable batmobile.timer
+RUN systemctl enable alfred.service
+RUN systemctl enable alfred-info.timer
+
+# enable hostapd-config script
+RUN systemctl enable hostapd-config.service
+RUN systemctl enable hostapd.service

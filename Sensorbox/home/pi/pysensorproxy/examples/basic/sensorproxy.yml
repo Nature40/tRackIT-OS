@@ -1,0 +1,22 @@
+id: default
+storage_path: /data
+
+sensors:
+  cpu:
+    type: CPU
+  mem:
+    type: Memory
+  datavolume:
+    type: TelekomVolume
+  log:
+    type: LoggingHandler
+
+influx:
+  host: ds.mathematik.uni-marburg.de
+  port: 443
+  path: /influx/
+  ssl: true
+  verify_ssl: true
+  username: sensorboxes
+  password: supersicher
+  database: nature40

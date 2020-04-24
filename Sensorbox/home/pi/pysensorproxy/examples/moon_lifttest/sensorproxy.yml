@@ -1,0 +1,34 @@
+id: default
+storage_path: /data
+
+lift:
+  ssid: nature40-liftsystem-0000
+  height: 1
+
+wifi:
+  interface: wlan0
+
+sensors:
+  cpu:
+    type: CPU
+  mem:
+    type: Memory
+  log:
+    type: LoggingHandler
+    level: DEBUG
+  am2302:
+    type: AM2302
+    pin: 4
+  lumen:
+    type: TSL2561
+  mic:
+    type: Microphone
+    card: 1
+    device: 0
+    sample_format: S16_LE
+    rate: 44100
+    level: 100%
+    audio_format: wav
+  cam:
+    type: PiCamera
+    img_format: jpeg

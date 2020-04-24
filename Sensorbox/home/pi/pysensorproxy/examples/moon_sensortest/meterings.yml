@@ -1,0 +1,35 @@
+# basic schedule test
+system:
+  sensors:
+    cpu: {}
+    mem: {}
+  schedule:
+    interval: 1m
+
+# schedule test: start after end; count + delay test
+ongoing:
+  sensors:
+    am2302: 
+      count: 5
+      delay: 1s
+    lumen: 
+      count: 5
+  schedule:
+    interval: 1m
+    start: 20h
+    end: 19h
+
+# lift test: maximum height, medium height
+lift:
+  schedule:
+    interval: 2m
+  sensors:
+    mic:
+      duration: 5s
+    cam:
+      res_X: 3280
+      res_Y: 2464
+      adjust_time: 5s
+    am2302: {}
+    lumen: {}
+  heights: [40, 1, 0]

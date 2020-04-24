@@ -1,7 +1,5 @@
-FROM Mesh.img
+FROM Base.img
 PUMP 100M
-
-RUN apt-get update
 
 # Enable hardware interaction 
 RUN raspi-config nonint do_camera 0
@@ -14,18 +12,10 @@ RUN apt-get -y remove fake-hwclock
 RUN update-rc.d -f fake-hwclock remove
 RUN systemctl disable fake-hwclock
 
-# Install hotspot software
-RUN apt-get install -y dnsmasq hostapd
-
 # install config files
 INSTALL Sensorbox/ /
 
-# enable hostapd-config script
-RUN systemctl enable hostapd-config.service
-RUN systemctl enable hostapd.service
-
 # install pysensorproxy and dependencies
-INSTALL pysensorproxy /home/pi/pysensorproxy
 RUN chown -R pi:pi /home/pi/pysensorproxy
 RUN pip3 install -e /home/pi/pysensorproxy
 RUN apt-get install -y flac
