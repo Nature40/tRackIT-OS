@@ -2,7 +2,8 @@ name: Build Images
 
 on:
   push:
-    branches: [GithubWorkflows]
+    tags:
+      - "*"
 
 jobs:
   build:
@@ -31,33 +32,33 @@ jobs:
         run: zip RadioTracking.zip RadioTracking.img
       - name: Package Sensorbox.zip
         run: zip Sensorbox.zip Sensorbox.img
-      # - name: Create GitHub release
-      #   id: create_release
-      #   uses: actions/create-release@v1.0.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     draft: false
-      #     prerelease: true
-      # - name: Upload Sensorbox.zip to release
-      #   id: upload_release_asset
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: Sensorbox.zip
-      #     asset_name: Sensorbox.zip
-      #     asset_content_type: application/zip
-      # - name: Upload RadioTracking.zip to release
-      #   id: upload_release_asset
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: RadioTracking.zip
-      #     asset_name: RadioTracking.zip
-      #     asset_content_type: application/zip
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: true
+      - name: Upload Sensorbox.zip to release
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: Sensorbox.zip
+          asset_name: Sensorbox.zip
+          asset_content_type: application/zip
+      - name: Upload RadioTracking.zip to release
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: RadioTracking.zip
+          asset_name: RadioTracking.zip
+          asset_content_type: application/zip
