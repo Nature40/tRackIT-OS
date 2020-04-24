@@ -51,7 +51,7 @@ RUN bash <<EOF
     cd /home/pi/rtl-power-fftw/build
     cmake ../
     make -j `nproc`
-    make install 
+    make install
 EOF
 
 RUN bash <<EOF
@@ -120,6 +120,9 @@ RUN systemctl enable systemd-time-wait-sync.service
 
 # Enable signal_detect_restart timer
 RUN systemctl enable signal_detect_restart.timer
+
+# install go if not present
+HOST bash -c "go version || apt-get install -y golang git"
 
 # Compile and install rtlsdr_fcu
 HOST bash <<EOF
