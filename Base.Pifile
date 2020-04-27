@@ -1,8 +1,8 @@
 # This image is intended to provide a base layer for various 
 # Sensorboxes configurations. 
 
-FROM http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
-PUMP 400M
+FROM http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-14/2020-02-13-raspbian-buster-lite.zip
+PUMP 600M
 
 # Upgrade raspbian
 RUN apt-get update

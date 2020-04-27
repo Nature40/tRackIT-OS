@@ -1,6 +1,7 @@
 PIMOD=docker-compose run pimod pimod.sh
 DSSTORE_CLEAN=find . -name ".DS_Store" -type f -delete
 
+.DELETE_ON_ERROR:
 
 all: Sensorbox.img RadioTracking.img
 
