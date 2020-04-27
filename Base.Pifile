@@ -6,6 +6,7 @@ PUMP 400M
 
 # Upgrade raspbian
 RUN apt-get update
+RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
 
 # Install basic software
 RUN apt-get install -y \
