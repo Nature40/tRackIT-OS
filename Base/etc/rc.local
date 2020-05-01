@@ -20,5 +20,3 @@ fi
 # power down HDMI
 /usr/bin/tvservice -o
 
-# disable Ethernet, if no cable is connected
-[ `cat /sys/class/net/eth0/carrier` -eq 0 ] && (echo "Powering off eth0 (not connected)" && uhubctl -p1 -a0)
