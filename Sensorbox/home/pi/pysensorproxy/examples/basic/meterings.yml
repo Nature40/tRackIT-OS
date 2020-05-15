@@ -1,8 +1,0 @@
-# test: basic system monitoring
-system:
-  sensors:
-    datavolume: {}
-    cpu: {}
-    mem: {}
-  schedule:
-    interval: 1m
