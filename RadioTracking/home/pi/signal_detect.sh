@@ -24,7 +24,7 @@ source "${CONFIGFILE}"
 
 # testing number of available devices
 echo "# Testing number of available devices..."
-DEVICE_LOG=`rtl_sdr -n1 /dev/null 2>&1 || echo "Found 0 device(s)"`
+DEVICE_LOG=`timeout 10 rtl_sdr -n1 /dev/null 2>&1 || echo "Found 0 device(s)"`
 DEVICES_ONLINE=`grep -m 1 -o [0-9] <<<${DEVICE_LOG}`
 
 if [[ ${DEVICES_ONLINE} < ${DEVICE_COUNT} ]]; then 
