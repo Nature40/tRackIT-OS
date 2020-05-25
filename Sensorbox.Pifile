@@ -33,5 +33,11 @@ EOF
 # Enable i2s sound driver
 RUN tee -a /etc/modules <<<"snd-bcm2835"
 
-# Add i2s sound dkms modules
-RUN dkms add -m snd-i2s_rpi -v 0.0.2
+# Add and install i2s sound dkms module
+RUN dkms add -m snd-i2s_rpi -v 0.0.3
+
+RUN dkms install -m snd-i2s_rpi -v 0.0.3 -k 4.19.97+
+RUN dkms install -m snd-i2s_rpi -v 0.0.3 -k 4.19.97-v7+
+RUN dkms install -m snd-i2s_rpi -v 0.0.3 -k 4.19.97-v7l+
+
+RUN tee -a /etc/modules <<<snd-i2s_rpi
