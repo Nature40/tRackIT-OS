@@ -7,9 +7,9 @@
 [submodule "Base/home/pi/uhubctl"]
 	path = Base/home/pi/uhubctl
 	url = https://github.com/mvp/uhubctl
-[submodule "Sensorbox/usr/src/snd-i2s_rpi-0.0.2"]
-	path = Sensorbox/usr/src/snd-i2s_rpi-0.0.2
-	url = https://github.com/opencardev/snd-i2s_rpi
+[submodule "Sensorbox/usr/src/snd-i2s_rpi-0.0.3"]
+	path = Sensorbox/usr/src/snd-i2s_rpi-0.0.3
+	url = https://github.com/Nature40/snd-i2s_rpi
 [submodule "Sensorbox/home/pi/pysensorproxy"]
 	path = Sensorbox/home/pi/pysensorproxy
 	url = https://github.com/Nature40/pysensorproxy.git
