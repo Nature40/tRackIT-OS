@@ -28,3 +28,9 @@
 [submodule "Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts"]
 	path = Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts
 	url = https://github.com/adafruit/Raspberry-Pi-Installer-Scripts
+[submodule "BatRack/home/pi/RPi_Cam_Web_Interface"]
+	path = BatRack/home/pi/RPi_Cam_Web_Interface
+	url = https://github.com/silvanmelchior/RPi_Cam_Web_Interface
+[submodule "BatRack/home/pi/BatRack"]
+	path = BatRack/home/pi/BatRack
+	url = https://github.com/Nature40/BatRack

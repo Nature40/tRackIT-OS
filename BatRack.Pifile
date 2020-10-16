@@ -1,0 +1,15 @@
+FROM Base.img
+
+PUMP 800M
+
+# Enable camera interaction 
+RUN raspi-config nonint do_camera 0
+
+# install config files
+INSTALL BatRack/ /
+
+# install RPi_Cam_Web_Interface software
+RUN apt-get update
+RUN /home/pi/RPi_Cam_Web_Interface/install.sh q
+
+RUN bash
