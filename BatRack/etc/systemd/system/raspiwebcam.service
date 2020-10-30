@@ -1,0 +1,12 @@
+[Unit]
+Description=RPi Cam Web Interface
+After=network.target raspimjpeg.service
+
+[Service]
+User=www-data
+ExecStart=/usr/bin/php /var/www/html/schedule.php
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -8,8 +8,74 @@ RUN raspi-config nonint do_camera 0
 # install config files
 INSTALL BatRack/ /
 
-# install RPi_Cam_Web_Interface software
+# update system ressources
 RUN apt-get update
-RUN /home/pi/RPi_Cam_Web_Interface/install.sh q
 
-RUN bash
+# patch install file to omit sudo
+RUN sed -i "s/sudo //g" /home/pi/RPi_Cam_Web_Interface/install.sh
+
+# Install RPi_Cam_Web_Interface software (restore rc.local afterwards)
+RUN cp /etc/rc.local /etc/rc.local.bak
+RUN /home/pi/RPi_Cam_Web_Interface/install.sh q
+RUN cp /etc/rc.local.bak /etc/rc.local
+
+# Prepare raspimjpeg folders
+RUN mkdir -p /dev/shm/mjpeg
+RUN chown www-data:www-data /dev/shm/mjpeg
+RUN chmod 777 /dev/shm/mjpeg 
+
+# change apache port
+RUN sed -i "s/80/81/" /etc/apache2/ports.conf 
+RUN systemctl enable apache2
+
+# create bookmark and forward apache through caddy 
+RUN ln -s . /data/rpicam
+RUN tee /etc/caddy/Caddyfile <<EOF
+:80 {
+    root /data/
+    gzip
+    
+    browse
+    proxy /sysdweb localhost:10080 {
+        without /sysdweb
+        transparent
+    }
+    proxy /rpicam localhost:81 {
+        without /rpicam
+        transparent
+    }
+}
+EOF
+
+# Enable services and add to sysdweb
+RUN systemctl enable raspimjpeg.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+
+[raspimjpeg]
+title = RaspiMJPEG
+unit = raspimjpeg
+EOF
+
+RUN systemctl enable raspiwebcam.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+
+[raspiwebcam]
+title = RPi Cam Web Interface
+unit = raspiwebcam
+EOF
+
+# Install BatRack dependenies
+RUN apt-get install -y python3-numpy python3-pyaudio
+RUN pip3 install picamera RPi.GPIO numpy_ringbuffer mysql mysql-connector-python-rf python-dateutil
+
+# Install BatRack example config
+RUN cp /home/pi/BatRack/BatRecorder.conf /boot/BatRecorder.conf
+
+# Enable BatRecorder
+RUN systemctl enable BatRecorder.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+
+[BatRecorder]
+title = Bat Recorder
+unit = BatRecorder
+EOF
