@@ -1,6 +1,6 @@
-FROM Base.img
+FROM RadioTracking.img
 
-PUMP 800M
+PUMP 500M
 
 # Enable camera interaction 
 RUN raspi-config nonint do_camera 0
@@ -32,17 +32,18 @@ RUN systemctl enable apache2
 RUN ln -s . /data/rpicam
 RUN tee /etc/caddy/Caddyfile <<EOF
 :80 {
-    root /data/
-    gzip
+    encode gzip
     
-    browse
-    proxy /sysdweb localhost:10080 {
-        without /sysdweb
-        transparent
+    handle_path /sysdweb/* {
+        reverse_proxy localhost:10080
     }
-    proxy /rpicam localhost:81 {
-        without /rpicam
-        transparent
+
+    handle_path /rpicam/* {
+        reverse_proxy localhost:81
+    }
+
+    file_server * browse {
+        root /data/
     }
 }
 EOF

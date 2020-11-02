@@ -38,9 +38,9 @@ RUN cp -R /home/pi/Raspberry-Pi-Installer-Scripts/i2s_mic_module/ /usr/src/snd-i
 
 RUN dkms add -m snd-i2smic-rpi -v 0.1.0
 
-RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 4.19.97+
-RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 4.19.97-v7+
-RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 4.19.97-v7l+
+RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 5.4.72+
+RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 5.4.72-v7+
+RUN dkms install -m snd-i2smic-rpi -v 0.1.0 -k 5.4.72-v7l+
 
 # Load kernel module on boot
 RUN tee -a /etc/modules-load.d/snd-i2smic-rpi.conf <<<snd-i2smic-rpi

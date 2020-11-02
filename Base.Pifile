@@ -1,12 +1,11 @@
 # This image is intended to provide a base layer for various 
 # Sensorboxes configurations. 
 
-FROM http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-14/2020-02-13-raspbian-buster-lite.zip
-PUMP 600M
+FROM https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-08-24/2020-08-20-raspios-buster-armhf-lite.zip
+PUMP 800M
 
 # Upgrade raspbian
 RUN apt-get update
-RUN bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -y upgrade'
 
 # Install basic software
 RUN apt-get install -y \
@@ -84,13 +83,16 @@ RUN git config --global user.name "Nature 4.0 Sensorbox"
 # Install uhubctl
 RUN bash -c 'cd /home/pi/uhubctl; make; make install'
 
-# Install wireguard
-RUN apt-get install -y dirmngr raspberrypi-kernel-headers
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC
-RUN bash -c 'echo "deb http://deb.debian.org/debian/ unstable main" | tee -a /etc/apt/sources.list.d/unstable.list'
-RUN bash -c "printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n' | tee -a /etc/apt/preferences.d/limit-unstable"
+# Install wireguard (https://www.sigmdel.ca/michel/ha/wireguard/wireguard_02_en.html#installing_wg)
+RUN apt-get install -y raspberrypi-kernel-headers
+RUN tee -a /etc/apt/sources.list.d/testing.list <<EOF
+deb http://archive.raspbian.org/raspbian testing main
+EOF
+RUN tee -a /etc/apt/preferences.d/limit-testing <<EOF
+Package: *
+Pin: release a=testing
+Pin-Priority: 50
+EOF
 RUN apt-get update
 RUN apt-get install -y wireguard
 RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
@@ -107,8 +109,16 @@ RUN systemctl enable wg-quick@nature40
 RUN install-bu8822.sh
 
 # Install and enable caddy
-RUN curl https://getcaddy.com -o /tmp/getcaddy.sh
-RUN bash /tmp/getcaddy.sh personal
+RUN curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=arm&arm=7"
+RUN chmod +x /usr/bin/caddy
+RUN groupadd --system caddy
+RUN useradd --system \
+    --gid caddy \
+    --create-home \
+    --home-dir /var/lib/caddy \
+    --shell /usr/sbin/nologin \
+    --comment "Caddy web server" \
+    caddy
 RUN systemctl enable caddy
 
 # Install and enable sysdweb
