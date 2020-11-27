@@ -67,16 +67,13 @@ EOF
 
 # Install BatRack dependenies
 RUN apt-get install -y python3-numpy python3-pyaudio
-RUN pip3 install picamera RPi.GPIO numpy_ringbuffer mysql mysql-connector-python-rf python-dateutil
-
-# Install BatRack example config
-RUN cp /home/pi/BatRack/BatRecorder.conf /boot/BatRecorder.conf
+RUN python3 -m pip install -e /home/pi/BatRack
 
 # Enable BatRecorder
-RUN systemctl enable BatRecorder.service
+RUN systemctl enable BatRack.service
 RUN tee -a /etc/sysdweb.conf <<EOF
 
-[BatRecorder]
-title = Bat Recorder
-unit = BatRecorder
+[BatRack]
+title = BatRack
+unit = BatRack
 EOF

@@ -1,9 +1,9 @@
 [Unit]
-Description=Record Videos of Bats based on various trigges
+Description=Evaluate sensors for active bats and trigger recordings
 After=network.target raspimjpeg.service raspiwebcam.service
 
 [Service]
-ExecStart=/usr/bin/python3 /home/pi/BatRack/BatRack.py
+ExecStart=python3 -m batrack /boot/BatRack.conf
 Restart=always
 RestartSec=5
 
