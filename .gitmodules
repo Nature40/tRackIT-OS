@@ -25,6 +25,9 @@
 [submodule "RadioTracking/home/pi/rtlsdr_fcu"]
 	path = RadioTracking/home/pi/rtlsdr_fcu
 	url = https://github.com/Nature40/rtlsdr_fcu.git
+[submodule "RadioTracking/home/pi/pyradiotracking"]
+	path = RadioTracking/home/pi/pyradiotracking
+	url = https://github.com/Nature40/pyradiotracking
 [submodule "Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts"]
 	path = Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts
 	url = https://github.com/adafruit/Raspberry-Pi-Installer-Scripts
