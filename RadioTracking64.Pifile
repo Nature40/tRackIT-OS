@@ -1,10 +1,6 @@
-# This image is intended to provide a base layer for various 
-# Sensorboxes configurations. 
+FROM https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2020-08-24/2020-08-20-raspios-buster-arm64-lite.zip
+PUMP 1000M
 
-FROM https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-12-04/2020-12-02-raspios-buster-armhf-lite.zip
-PUMP 800M
-
-# Upgrade raspbian
 RUN apt-get update
 
 # Install basic software
@@ -13,20 +9,11 @@ RUN apt-get install -y \
     i2c-tools \
     vim \
     git \
-    mosh \
     libusb-1.0-0-dev
 
-RUN pip3 install --upgrade pip
+RUN apt-get install -y hostapd
 
-# Install networking tools
-RUN apt-get install -y \
-    batctl \
-    tcpdump \
-    hostapd \
-    dnsmasq \
-    alfred \
-    bridge-utils
-RUN pip3 install ping3
+RUN pip3 install --upgrade pip
 
 # Set default password
 RUN bash -c 'echo "pi:natur" | chpasswd'
@@ -73,40 +60,12 @@ RUN chmod 644       /root/.ssh/authorized_keys
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
 
-# add hdd mount to fstab
-RUN bash -c 'echo "/dev/sda1 /data ext4 defaults,auto,nofail 0 0" >> /etc/fstab'
-
 # set git config for possible local commits
 RUN git config --global user.email "root@nature40-sensorbox"
 RUN git config --global user.name "Nature 4.0 Sensorbox"
 
-# Install uhubctl
-RUN bash -c 'cd /home/pi/uhubctl; make; make install'
-
-# Install wireguard (https://www.sigmdel.ca/michel/ha/wireguard/wireguard_02_en.html#installing_wg)
-RUN apt-get install -y raspberrypi-kernel-headers
-RUN tee -a /etc/apt/sources.list.d/testing.list <<EOF
-deb http://archive.raspbian.org/raspbian testing main
-EOF
-RUN tee -a /etc/apt/preferences.d/limit-testing <<EOF
-Package: *
-Pin: release a=testing
-Pin-Priority: 50
-EOF
-RUN apt-get update
-RUN apt-get install -y wireguard
-RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
-RUN mkdir -p /etc/wireguard
-
 # enable hostname-config script
 RUN systemctl enable hostname-config.service
-
-# enable wireguard-config
-RUN ln -s /boot/wireguard.conf /etc/wireguard/nature40.conf
-RUN systemctl enable wg-quick@nature40
-
-# Install RTL8822BU drivers for all kernel version
-RUN install-bu8822.sh
 
 # Install and enable caddy
 RUN curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=arm&arm=7"
@@ -122,29 +81,49 @@ RUN useradd --system \
 RUN systemctl enable caddy
 
 # Install and enable sysdweb
+RUN apt-get install -y libsystemd-dev libdbus-glib-1-dev
 RUN chown -R pi:pi /home/pi/
 RUN pip3 install -e /home/pi/sysdweb
 RUN systemctl enable sysdweb
 
 # Create symlinks for other webserver targets
-RUN mkdir /data
+RUN mkdir -p /data
 RUN ln -s . /data/sysdweb
 RUN ln -s /boot/ /data/boot
 
 # Dump dmesg to disk
 RUN systemctl enable dmesgdump
 
-# enable mesh-config script
-RUN systemctl enable adhoc-config.service
-
 # Enable broadcast pings
 RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
-
-# Enable batmobile timed execution
-# RUN systemctl enable batmobile.timer
-# RUN systemctl enable alfred.service
-# RUN systemctl enable alfred-info.timer
 
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
+
+INSTALL RadioTracking /
+
+RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
+
+# Install rtl-sdr
+RUN apt-get install -y \
+    rtl-sdr \
+    python3-pip \
+    python3-numpy \
+    python3-scipy \
+
+# Install pyradiotracking
+RUN python3 -m pip install -e /home/pi/pyradiotracking
+
+# Enabling wait for time-sync.target (depending services will not start before the clock is synced)
+RUN systemctl enable systemd-time-wait-sync.service
+
+# Install and enable mosquitto
+RUN apt-get install -y mosquitto mosquitto-clients
+RUN systemctl enable mosquitto.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+
+[Mosquitto]
+title = Mosquitto
+unit = mosquitto
+EOF
