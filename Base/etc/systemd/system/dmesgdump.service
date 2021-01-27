@@ -7,6 +7,8 @@ ExecStartPre=/bin/sh -c "mkdir -p /data/`hostname`/log/"
 ExecStart=/bin/sh -c "exec dmesg -w > /data/`hostname`/log/`date +%%Y-%%m-%%dT%%H%%M%%S`_dmesg.txt"
 Restart=always
 RestartSec=10s
+User=pi
+Group=pi
 
 [Install]
 WantedBy=multi-user.target
