@@ -1,5 +1,5 @@
 FROM https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2020-08-24/2020-08-20-raspios-buster-arm64-lite.zip
-PUMP 1300M
+PUMP 2000M
 
 RUN apt-get update
 
@@ -11,7 +11,15 @@ RUN apt-get install -y \
     git \
     libusb-1.0-0-dev
 
-RUN apt-get install -y hostapd
+# Install networking tools
+RUN apt-get install -y \
+    batctl \
+    tcpdump \
+    hostapd \
+    dnsmasq \
+    alfred \
+    bridge-utils \
+    hostapd
 
 RUN pip3 install --upgrade pip
 
@@ -104,6 +112,7 @@ RUN systemctl enable dmesgdump
 RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
 
 # enable hostapd-config script
+RUN systemctl enable adhoc-config.service
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
 

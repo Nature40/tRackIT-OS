@@ -1,7 +1,7 @@
 [Unit]
 Description=adhoc-config
 After=local-fs.target
-Before=networking.service
+Before=ifup@wlan0.service
 
 [Service]
 ExecStart=/bin/bash -c '/etc/network/interfaces.d/adhoc.sh > /etc/network/interfaces.d/adhoc; /etc/dhcp/dhclient.conf.sh > /etc/dhcp/dhclient.conf'
