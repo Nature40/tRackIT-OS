@@ -7,33 +7,9 @@
 [submodule "Base/home/pi/uhubctl"]
 	path = Base/home/pi/uhubctl
 	url = https://github.com/mvp/uhubctl
-[submodule "Sensorbox/home/pi/pysensorproxy"]
-	path = Sensorbox/home/pi/pysensorproxy
-	url = https://github.com/Nature40/pysensorproxy.git
-[submodule "RadioTracking/home/pi/rtl-sdr"]
-	path = RadioTracking/home/pi/rtl-sdr
-	url = git://git.osmocom.org/rtl-sdr.git
-[submodule "RadioTracking/home/pi/rtl-power-fftw"]
-	path = RadioTracking/home/pi/rtl-power-fftw
-	url = https://github.com/AD-Vega/rtl-power-fftw.git
-[submodule "RadioTracking/home/pi/liquid-dsp"]
-	path = RadioTracking/home/pi/liquid-dsp
-	url = https://github.com/jgaeddert/liquid-dsp.git
 [submodule "RadioTracking/home/pi/rtlsdr_signal_detect"]
 	path = RadioTracking/home/pi/rtlsdr_signal_detect
 	url = https://github.com/Nature40/rtlsdr_signal_detect.git
-[submodule "RadioTracking/home/pi/rtlsdr_fcu"]
-	path = RadioTracking/home/pi/rtlsdr_fcu
-	url = https://github.com/Nature40/rtlsdr_fcu.git
 [submodule "RadioTracking/home/pi/pyradiotracking"]
 	path = RadioTracking/home/pi/pyradiotracking
 	url = https://github.com/Nature40/pyradiotracking
-[submodule "Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts"]
-	path = Sensorbox/home/pi/Raspberry-Pi-Installer-Scripts
-	url = https://github.com/adafruit/Raspberry-Pi-Installer-Scripts
-[submodule "BatRack/home/pi/RPi_Cam_Web_Interface"]
-	path = BatRack/home/pi/RPi_Cam_Web_Interface
-	url = https://github.com/silvanmelchior/RPi_Cam_Web_Interface
-[submodule "BatRack/home/pi/BatRack"]
-	path = BatRack/home/pi/BatRack
-	url = https://github.com/Nature40/BatRack

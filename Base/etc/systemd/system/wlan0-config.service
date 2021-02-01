@@ -4,7 +4,7 @@ After=local-fs.target
 Before=ifup@wlan0.service
 
 [Service]
-ExecStart=/bin/bash -c '/etc/network/interfaces.d/adhoc.sh > /etc/network/interfaces.d/adhoc; /etc/dhcp/dhclient.conf.sh > /etc/dhcp/dhclient.conf'
+ExecStart=/bin/bash -c '/etc/network/interfaces.d/wlan0.sh > /etc/network/interfaces.d/wlan0; /etc/dhcp/dhclient.conf.sh > /etc/dhcp/dhclient.conf'
 Type=oneshot
 StandardOutput=journal
 

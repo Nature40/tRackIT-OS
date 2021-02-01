@@ -1,129 +1,51 @@
-FROM Sensorbox.img
-PUMP 500M
+FROM Base64.img
+PUMP 1000M
 
-RUN apt-get update
 INSTALL RadioTracking /
 
-RUN apt-get install -y --no-install-recommends\
-    build-essential \
-    cmake \
-    pkg-config \
-    ca-certificates \
-    sox \
-    socat \
-    libusb-1.0-0-dev \
-    libsox-fmt-mp3 \
-    libfftw3-dev \
-    libtclap-dev
+# Install and enable mosquitto
+RUN apt-get install -y mosquitto mosquitto-clients
+RUN systemctl enable mosquitto.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+[Mosquitto]
+title = Mosquitto MQTT Broker
+unit = mosquitto
+EOF
 
+# Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 
-# Install rtl-sdr
+# Install radiotracking
 RUN apt-get install -y \
-    autotools-dev \
-    autoconf \
-    automake \
-    default-libmysqlclient-dev \
-    mariadb-server
-
-RUN bash <<EOF
-    cd /home/pi/liquid-dsp
-    ./bootstrap.sh
-    ./configure
-    make -j `nproc`
-    make install
-    ldconfig
-EOF
-
-RUN bash <<EOF
-    mkdir -p /home/pi/rtl-sdr/build
-    cd /home/pi/rtl-sdr/build
-
-    cmake ../ -DINSTALL_UDEV_RULES=ON -DDETACH_KERNEL_DRIVER=ON
-    make -j `nproc`
-    make install
-    ldconfig
-EOF
-
-# Install rtl-power-fftw
-RUN bash <<EOF
-    mkdir /home/pi/rtl-power-fftw/build
-    cd /home/pi/rtl-power-fftw/build
-    cmake ../
-    make -j `nproc`
-    make install
-EOF
-
-RUN bash <<EOF
-    cd /home/pi/rtlsdr_signal_detect
-    make -j `nproc`
-    make install
-EOF
-
-# Enable RadioTracking services
-RUN systemctl enable mariadb
-RUN systemctl enable signal_detect
-
-# Enable logdump services
-RUN systemctl enable logdump@mariadb
-RUN systemctl enable logdump@signal_detect
-
-# Enable sysdweb managing
+    rtl-sdr \
+    python3 \
+    python3-pip \
+    python3-numpy \
+    python3-scipy \
+    python3-paho-mqtt
+RUN python3 -m pip install -e /home/pi/pyradiotracking
+RUN cp /home/pi/pyradiotracking/etc/config.example.ini /boot/radiotracking.ini
+RUN systemctl enable radiotracking.service
 RUN tee -a /etc/sysdweb.conf <<EOF
-
-[mariadb]
-title = MariaDB Database
-unit = mariadb
-
-[signal_detect]
-title = Radio Tracking
-unit = signal_detect
+[radiotracking]
+title = RadioTracking
+unit = radiotracking
 EOF
-
-# Initialized database
-RUN service mysql start
-RUN mysql <<EOF
-# configure secure root user
-UPDATE mysql.user SET Password=PASSWORD('natur') WHERE User='root';
-DELETE FROM mysql.user WHERE User='';
-DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-
-# remove test databases
-DROP DATABASE IF EXISTS test;
-DELETE FROM mysql.db WHERE db='test' OR db='test\\_%';
-
-# create local user for insertion
-CREATE USER IF NOT EXISTS rteu@localhost IDENTIFIED BY 'rteu';
-GRANT CREATE ON rteu.* TO rteu@localhost;
-GRANT INSERT ON rteu.* TO rteu@localhost;
-
-# create remote user
-CREATE USER IF NOT EXISTS pi@'%' IDENTIFIED BY 'natur';
-GRANT SELECT ON rteu.* TO pi@'%';
-
-FLUSH PRIVILEGES;
-EOF
-RUN service mysql stop
-
-# allow mysql to shutdown
-RUN sleep 10
-
-# Listen on all interfaces (mariadb)
-RUN sed -i 's/bind-address.*=.*127.0.0.1/bind-address = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
 
-# Enable signal_detect_restart timer
-RUN systemctl enable signal_detect_restart.timer
-
-# install go if not present
-HOST bash -c "go version || apt-get install -y golang git"
-
-# Compile and install rtlsdr_fcu
-HOST bash <<EOF
-    cd RadioTracking/home/pi/rtlsdr_fcu/
-    GOOS=linux GOARCH=arm GOARM=7 go build
-EOF
-
-INSTALL RadioTracking/home/pi/rtlsdr_fcu/rtlsdr_fcu /usr/local/bin/
+# # Install jupter
+# RUN apt-get install -y \
+#     jupyter \
+#     python3-pandas \
+#     python3-statsmodels
+# RUN python3 -m pip install --upgrade \
+#     plotly-express \
+#     ipywidgets
+# RUN systemctl enable jupyter-notebook.service
+# RUN tee -a /etc/sysdweb.conf <<EOF
+# [Jupyter Notebook]
+# title = Jupyter Notebook
+# unit = jupyter-notebook
+# EOF

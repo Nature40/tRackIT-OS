@@ -1,10 +1,8 @@
-# This image is intended to provide a base layer for various 
-# Sensorboxes configurations. 
-
-FROM https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-12-04/2020-12-02-raspios-buster-armhf-lite.zip
+FROM https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2020-08-24/2020-08-20-raspios-buster-arm64-lite.zip
 PUMP 800M
 
-# Upgrade raspbian
+# Update OS and sources
+RUN bash -c "echo y | rpi-update"
 RUN apt-get update
 
 # Install basic software
@@ -15,28 +13,24 @@ RUN apt-get install -y \
     git \
     mosh \
     libusb-1.0-0-dev
-
 RUN pip3 install --upgrade pip
 
 # Install networking tools
 RUN apt-get install -y \
-    batctl \
     tcpdump \
     hostapd \
     dnsmasq \
-    alfred \
     bridge-utils
-RUN pip3 install ping3
 
 # Set default password
 RUN bash -c 'echo "pi:natur" | chpasswd'
 
 # Allow basic connectivity (0 == success status code - enable)
-RUN raspi-config nonint do_serial 0
 RUN raspi-config nonint do_ssh 0
 
 # Install configuration files
 INSTALL Base /
+RUN chown -R pi:pi /home/pi/
 
 # Fix permissions on host ssh files
 RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
@@ -71,7 +65,7 @@ RUN chmod 644       /root/.ssh/id_ed25519.pub
 RUN chmod 644       /root/.ssh/authorized_keys
 
 # Set Europe/Berlin timezone
-RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime 
+RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # add hdd mount to fstab
 RUN bash -c 'echo "/dev/sda1 /data ext4 defaults,auto,nofail 0 0" >> /etc/fstab'
@@ -83,8 +77,11 @@ RUN git config --global user.name "Nature 4.0 Sensorbox"
 # Install uhubctl
 RUN bash -c 'cd /home/pi/uhubctl; make; make install'
 
-# Install wireguard (https://www.sigmdel.ca/michel/ha/wireguard/wireguard_02_en.html#installing_wg)
-RUN apt-get install -y raspberrypi-kernel-headers
+# enable hostname-config script
+RUN systemctl enable hostname-config.service
+
+# install wireguard (requires rpi-update from above)
+RUN bash -c "wget http://archive.raspbian.org/raspbian.public.key -O - | apt-key add -"
 RUN tee -a /etc/apt/sources.list.d/testing.list <<EOF
 deb http://archive.raspbian.org/raspbian testing main
 EOF
@@ -94,22 +91,19 @@ Pin: release a=testing
 Pin-Priority: 50
 EOF
 RUN apt-get update
-RUN apt-get install -y wireguard
-RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
-RUN mkdir -p /etc/wireguard
+RUN apt-get install -y wireguard-tools
 
-# enable hostname-config script
-RUN systemctl enable hostname-config.service
-
-# enable wireguard-config
-RUN ln -s /boot/wireguard.conf /etc/wireguard/nature40.conf
-RUN systemctl enable wg-quick@nature40
-
-# Install RTL8822BU drivers for all kernel version
-RUN install-bu8822.sh
+# enable wireguard
+RUN ln -s /boot/wireguard.conf /etc/wireguard/wireguard.conf
+RUN systemctl enable wg-quick@wireguard
+RUN tee -a /etc/sysdweb.conf <<EOF
+[wg-quick@wireguard]
+title = Wireguard (/boot/wireguard.conf)
+unit = wg-quick@wireguard
+EOF
 
 # Install and enable caddy
-RUN curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=arm&arm=7"
+RUN curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=arm64"
 RUN chmod +x /usr/bin/caddy
 RUN groupadd --system caddy
 RUN useradd --system \
@@ -120,10 +114,15 @@ RUN useradd --system \
     --comment "Caddy web server" \
     caddy
 RUN systemctl enable caddy
+RUN tee -a /etc/sysdweb.conf <<EOF
+[caddy]
+title = Caddy Web Server
+unit = caddy
+EOF
 
 # Install and enable sysdweb
-RUN chown -R pi:pi /home/pi/
-RUN pip3 install -e /home/pi/sysdweb
+RUN apt-get install -y python3-systemd python3-dbus libdbus-glib-1-dev
+RUN python3 -m pip install -e /home/pi/sysdweb
 RUN systemctl enable sysdweb
 
 # Create symlinks for other webserver targets
@@ -136,15 +135,11 @@ RUN ln -s /boot/ /data/boot
 RUN systemctl enable dmesgdump
 
 # enable mesh-config script
-RUN systemctl enable adhoc-config.service
+RUN systemctl enable wlan0-config.service
 
-# Enable broadcast pings
+# Modify default network settings
+RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
 RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
-
-# Enable batmobile timed execution
-# RUN systemctl enable batmobile.timer
-# RUN systemctl enable alfred.service
-# RUN systemctl enable alfred-info.timer
 
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service

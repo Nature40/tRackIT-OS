@@ -1,3 +1,0 @@
-allow-hotplug wlan1
-iface wlan1 inet static
-    address 192.168.4.1/24
