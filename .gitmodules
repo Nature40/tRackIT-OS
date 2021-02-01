@@ -12,4 +12,4 @@
 	url = https://github.com/Nature40/rtlsdr_signal_detect.git
 [submodule "RadioTracking/home/pi/pyradiotracking"]
 	path = RadioTracking/home/pi/pyradiotracking
-	url = https://github.com/Nature40/pyradiotracking
+	url = git@github.com:Nature40/pyradiotracking.git
