@@ -14,12 +14,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Run pimod OpenWRT example
-        uses: Natur40/pimod@v0.2.1
+      - name: Run Base Pifile
+        uses: Nature40/pimod@v0.2.1
         with:
           pifile: Base.Pifile
-      - name: Run pimod OpenWRT example
-        uses: Natur40/pimod@v0.2.1
+      - name: Run Radiotracking Pifile
+        uses: Nature40/pimod@v0.2.1
         with:
           pifile: RadioTracking.Pifile
 
