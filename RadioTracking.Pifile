@@ -1,5 +1,5 @@
-FROM Base64.img
-PUMP 1000M
+FROM Base.img
+PUMP 700M
 
 INSTALL RadioTracking /
 
@@ -24,7 +24,6 @@ RUN apt-get install -y \
     python3-scipy \
     python3-paho-mqtt
 RUN python3 -m pip install -e /home/pi/pyradiotracking
-RUN cp /home/pi/pyradiotracking/etc/config.example.ini /boot/radiotracking.ini
 RUN systemctl enable radiotracking.service
 RUN tee -a /etc/sysdweb.conf <<EOF
 [radiotracking]
@@ -32,20 +31,10 @@ title = RadioTracking
 unit = radiotracking
 EOF
 
+# Install radiotracking-dashboard dependencies
+RUN python3 -m pip install dash
+
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
 
-# # Install jupter
-# RUN apt-get install -y \
-#     jupyter \
-#     python3-pandas \
-#     python3-statsmodels
-# RUN python3 -m pip install --upgrade \
-#     plotly-express \
-#     ipywidgets
-# RUN systemctl enable jupyter-notebook.service
-# RUN tee -a /etc/sysdweb.conf <<EOF
-# [Jupyter Notebook]
-# title = Jupyter Notebook
-# unit = jupyter-notebook
-# EOF
+# RUN apt-get install -y gnss-sdr

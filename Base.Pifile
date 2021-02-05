@@ -1,5 +1,5 @@
 FROM https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2020-08-24/2020-08-20-raspios-buster-arm64-lite.zip
-PUMP 800M
+PUMP 500M
 
 # Update OS and sources
 RUN bash -c "echo y | rpi-update"
@@ -134,8 +134,8 @@ RUN ln -s /boot/ /data/boot
 # Dump dmesg to disk
 RUN systemctl enable dmesgdump
 
-# enable mesh-config script
-RUN systemctl enable wlan0-config.service
+# enable wifi-config script
+RUN systemctl enable interface-config@wlan0.service
 
 # Modify default network settings
 RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"

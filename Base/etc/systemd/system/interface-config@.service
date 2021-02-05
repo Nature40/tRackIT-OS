@@ -1,0 +1,12 @@
+[Unit]
+Description=interface-config
+After=local-fs.target
+Before=ifup@%I.service
+
+[Service]
+ExecStart=/bin/bash -c '/etc/network/interfaces.d/%I.sh > /etc/network/interfaces.d/%I'
+Type=oneshot
+StandardOutput=journal
+
+[Install]
+RequiredBy=network.target

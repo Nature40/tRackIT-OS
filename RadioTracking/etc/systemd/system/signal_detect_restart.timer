@@ -1,9 +1,0 @@
-[Unit]
-Description=hourly signal_detect restart
-
-[Timer]
-OnCalendar=*-*-* *:00:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target
