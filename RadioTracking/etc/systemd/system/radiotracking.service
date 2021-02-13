@@ -7,9 +7,7 @@ StartLimitAction=reboot
 
 [Service]
 ExecStartPre=+/bin/bash -c "echo 0 > /sys/module/usbcore/parameters/usbfs_memory_mb"
-User=pi
-Group=pi
-ExecStart=/usr/bin/python3 -m radiotracking @/boot/radiotracking.ini
+ExecStart=/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini
 Restart=always
 RestartSec=10s
 

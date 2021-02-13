@@ -12,6 +12,13 @@ title = Mosquitto MQTT Broker
 unit = mosquitto
 EOF
 
+RUN tee /etc/mosquitto/mosquitto.conf <<EOF
+pid_file /var/run/mosquitto.pid
+persistence true
+persistence_location /var/lib/mosquitto/
+include_dir /boot/mosquitto.d
+EOF
+
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 
