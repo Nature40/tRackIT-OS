@@ -13,3 +13,6 @@
 [submodule "RadioTracking/home/pi/pyradiotracking"]
 	path = RadioTracking/home/pi/pyradiotracking
 	url = https://github.com/Nature40/pyradiotracking.git
+[submodule "RadioTracking/home/pi/pyradiotracking-lora"]
+	path = RadioTracking/home/pi/pyradiotracking-lora
+	url = https://github.com/Nature40/pyradiotracking-lora.git

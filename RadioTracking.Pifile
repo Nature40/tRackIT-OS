@@ -19,6 +19,13 @@ persistence_location /var/lib/mosquitto/
 include_dir /boot/mosquitto.d
 EOF
 
+# List timesyncd
+RUN tee -a /etc/sysdweb.conf <<EOF
+[timesyncd]
+title = Network Time Synchronization
+unit = systemd-timesyncd
+EOF
+
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 
@@ -40,6 +47,7 @@ EOF
 
 # Install radiotracking-dashboard dependencies
 RUN python3 -m pip install dash
+RUN ln -s . /data/radiotracking
 
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
