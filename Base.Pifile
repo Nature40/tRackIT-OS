@@ -67,9 +67,6 @@ RUN chmod 644       /root/.ssh/authorized_keys
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
-# add hdd mount to fstab
-RUN bash -c 'echo "/dev/sda1 /data ext4 defaults,auto,nofail 0 0" >> /etc/fstab'
-
 # set git config for possible local commits
 RUN git config --global user.email "root@nature40-sensorbox"
 RUN git config --global user.name "Nature 4.0 Sensorbox"

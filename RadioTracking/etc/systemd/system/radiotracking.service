@@ -10,6 +10,8 @@ ExecStartPre=+/bin/bash -c "echo 0 > /sys/module/usbcore/parameters/usbfs_memory
 ExecStart=/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini
 Restart=always
 RestartSec=10s
+User=pi
+Group=pi
 
 [Install]
 WantedBy=multi-user.target
