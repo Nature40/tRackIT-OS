@@ -26,6 +26,17 @@ title = Network Time Synchronization
 unit = systemd-timesyncd
 EOF
 
+# Install and enable pymqttutil
+RUN python3 -m pip install -e /home/pi/pymqttutil
+RUN python3 -m pip install psutil
+RUN systemctl enable mqttutil.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+[mqttutil]
+title = MQTTUtil
+unit = mqttutil
+EOF
+RUN 
+
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 

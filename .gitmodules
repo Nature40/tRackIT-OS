@@ -16,3 +16,6 @@
 [submodule "RadioTracking/home/pi/pyradiotracking-lora"]
 	path = RadioTracking/home/pi/pyradiotracking-lora
 	url = https://github.com/Nature40/pyradiotracking-lora.git
+[submodule "RadioTracking/home/pi/pymqttutil"]
+	path = RadioTracking/home/pi/pymqttutil
+	url = https://github.com/Nature40/pymqttutil
