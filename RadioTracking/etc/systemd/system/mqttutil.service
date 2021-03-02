@@ -3,7 +3,7 @@ Description=MQTTUtil
 After=mosquitto.service
 
 [Service]
-ExecStart=/usr/bin/python3 -m mqttutil -c /boot/mqttutil.conf -v
+ExecStart=/usr/bin/python3 -m mqttutil -c /boot/mqttutil.conf -v --json
 Restart=always
 RestartSec=10s
 User=pi
