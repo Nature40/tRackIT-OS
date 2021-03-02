@@ -35,7 +35,6 @@ RUN tee -a /etc/sysdweb.conf <<EOF
 title = MQTTUtil
 unit = mqttutil
 EOF
-RUN 
 
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
