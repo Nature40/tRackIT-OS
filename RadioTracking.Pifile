@@ -36,6 +36,14 @@ title = MQTTUtil
 unit = mqttutil
 EOF
 
+# Enable huaweicheck
+RUN systemctl enable huaweicheck.timer
+RUN tee -a /etc/sysdweb.conf <<EOF
+[huaweicheck]
+title = Huawei Check
+unit = huaweicheck
+EOF
+
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 
@@ -61,5 +69,6 @@ RUN ln -s . /data/radiotracking
 
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
+
 
 # RUN apt-get install -y gnss-sdr

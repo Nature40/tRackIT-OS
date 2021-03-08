@@ -1,0 +1,6 @@
+[Unit]
+Description=Check Huawei cellular connection
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/huaweicheck.py
+Type=oneshot
