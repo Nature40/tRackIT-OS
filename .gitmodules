@@ -2,20 +2,14 @@
 	path = pimod
 	url = https://github.com/Nature40/pimod.git
 [submodule "Base/home/pi/sysdweb"]
-	path = Base/home/pi/sysdweb
+	path = home/pi/sysdweb
 	url = https://github.com/Nature40/sysdweb
 [submodule "Base/home/pi/uhubctl"]
-	path = Base/home/pi/uhubctl
+	path = home/pi/uhubctl
 	url = https://github.com/mvp/uhubctl
-[submodule "RadioTracking/home/pi/rtlsdr_signal_detect"]
-	path = RadioTracking/home/pi/rtlsdr_signal_detect
-	url = https://github.com/Nature40/rtlsdr_signal_detect.git
 [submodule "RadioTracking/home/pi/pyradiotracking"]
-	path = RadioTracking/home/pi/pyradiotracking
+	path = home/pi/pyradiotracking
 	url = https://github.com/Nature40/pyradiotracking.git
-[submodule "RadioTracking/home/pi/pyradiotracking-lora"]
-	path = RadioTracking/home/pi/pyradiotracking-lora
-	url = https://github.com/Nature40/pyradiotracking-lora.git
 [submodule "RadioTracking/home/pi/pymqttutil"]
-	path = RadioTracking/home/pi/pymqttutil
+	path = home/pi/pymqttutil
 	url = https://github.com/Nature40/pymqttutil

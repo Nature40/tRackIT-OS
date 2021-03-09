@@ -1,0 +1,159 @@
+FROM Base.img
+PUMP 400M
+
+# Install custom folders 
+INSTALL boot /boot
+INSTALL etc /etc
+INSTALL home /home
+INSTALL root /root
+INSTALL usr /usr
+INSTALL var /var
+
+# Fix permissions for pi user
+RUN chown -R pi:pi /home/pi/
+
+#################################################
+### basic configuration
+
+# Fix permissions on host ssh files
+RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
+RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
+RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
+RUN systemctl disable regenerate_ssh_host_keys
+
+# Install user ssh files and fix permissions
+INSTALL home/pi/.ssh /home/pi/.ssh
+RUN chown pi:pi /home/pi
+RUN chown pi:pi /home/pi/.ssh
+RUN chown pi:pi /home/pi/.ssh/id_ed25519
+RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
+RUN chown pi:pi /home/pi/.ssh/authorized_keys
+RUN chmod 755   /home/pi
+RUN chmod 700   /home/pi/.ssh
+RUN chmod 600   /home/pi/.ssh/id_ed25519
+RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
+RUN chmod 644   /home/pi/.ssh/authorized_keys
+
+# Install root ssh files and fix permissions
+INSTALL home/pi/.ssh /root/.ssh
+RUN chown root:root /root
+RUN chown root:root /root/.ssh
+RUN chown root:root /root/.ssh/id_ed25519
+RUN chown root:root /root/.ssh/id_ed25519.pub
+RUN chown root:root /root/.ssh/authorized_keys
+RUN chmod 755       /root
+RUN chmod 700       /root/.ssh
+RUN chmod 600       /root/.ssh/id_ed25519
+RUN chmod 644       /root/.ssh/id_ed25519.pub
+RUN chmod 644       /root/.ssh/authorized_keys
+
+# Set default password
+RUN bash -c 'echo "pi:natur" | chpasswd'
+
+# Allow basic connectivity (0 == success status code - enable)
+RUN raspi-config nonint do_ssh 0
+
+# Set Europe/Berlin timezone
+RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+
+# set git config for possible local commits
+RUN git config --global user.email "pi@tRackIT"
+RUN git config --global user.name "tRackIT User"
+
+# enable hostname-config script and set default hostname
+RUN bash -c 'CMDLINE=$(cat /boot/cmdline.txt); echo "${CMDLINE} -- systemd.hostname=tRackIT" > /boot/cmdline.txt'
+RUN systemctl enable hostname-config.service
+
+# Enabling wait for time-sync.target (depending services will not start before the clock is synced)
+RUN systemctl enable systemd-time-wait-sync.service
+
+#################################################
+### network configuration
+
+# enable hostapd-config script (WiFi AP)
+RUN systemctl enable hostapd-config.service
+RUN systemctl enable hostapd.service
+
+# enable wifi-config script
+RUN systemctl enable interface-config@wlan0.service
+
+# Modify default network settings
+RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
+RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
+
+# enable wireguard
+RUN ln -s /boot/wireguard.conf /etc/wireguard/wireguard.conf
+RUN systemctl enable wg-quick@wireguard
+RUN tee -a /etc/sysdweb.conf <<EOF
+[wg-quick@wireguard]
+title = Wireguard (/boot/wireguard.conf)
+unit = wg-quick@wireguard
+EOF
+
+#################################################
+### services configuration
+
+# install and enable enable sysdweb
+RUN python3 -m pip install -e /home/pi/sysdweb
+RUN systemctl enable sysdweb
+
+# Create symlinks for other webserver targets
+RUN mkdir /data
+RUN chown pi:pi /data
+RUN ln -s . /data/sysdweb
+RUN ln -s . /data/radiotracking
+RUN ln -s /boot/ /data/boot
+
+# enable caddy
+RUN systemctl enable caddy
+RUN tee -a /etc/sysdweb.conf <<EOF
+[caddy]
+title = Caddy Web Server
+unit = caddy
+EOF
+
+# enable mosquitto
+RUN systemctl enable mosquitto.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+[Mosquitto]
+title = Mosquitto MQTT Broker
+unit = mosquitto
+EOF
+
+# List timesyncd
+RUN tee -a /etc/sysdweb.conf <<EOF
+[timesyncd]
+title = Network Time Synchronization
+unit = systemd-timesyncd
+EOF
+
+# Install and enable pymqttutil
+RUN python3 -m pip install -e /home/pi/pymqttutil
+RUN python3 -m pip install psutil
+RUN systemctl enable mqttutil.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+[mqttutil]
+title = MQTTUtil
+unit = mqttutil
+EOF
+
+# Install uhubctl (dependency) and enable huaweicheck
+RUN bash -c 'cd /home/pi/uhubctl; make; make install'
+RUN systemctl enable huaweicheck.timer
+RUN tee -a /etc/sysdweb.conf <<EOF
+[huaweicheck]
+title = Huawei Check
+unit = huaweicheck
+EOF
+
+# Blacklist DVB-T driver
+RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
+
+# Install radiotracking
+RUN python3 -m pip install -e /home/pi/pyradiotracking
+RUN systemctl enable radiotracking.service
+RUN tee -a /etc/sysdweb.conf <<EOF
+[radiotracking]
+title = RadioTracking
+unit = radiotracking
+EOF

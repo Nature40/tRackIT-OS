@@ -19,13 +19,13 @@ jobs:
         uses: Nature40/pimod@v0.2.1
         with:
           pifile: Base.Pifile
-      - name: Run Radiotracking Pifile
+      - name: Run tRackIT Pifile
         uses: Nature40/pimod@v0.2.1
         with:
-          pifile: RadioTracking.Pifile
+          pifile: tRackIT.Pifile
 
-      - name: Package RadioTracking.zip
-        run: zip RadioTracking.zip RadioTracking.img
+      - name: Package tRackIT.zip
+        run: zip tRackIT.zip tRackIT.img
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -36,13 +36,13 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: true
-      - name: Upload RadioTracking.zip to release
-        id: upload_radiotracking_zip
+      - name: Upload tRackIT.zip to release
+        id: upload_trackit_zip
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: RadioTracking.zip
-          asset_name: RadioTracking.zip
+          asset_path: tRackIT.zip
+          asset_name: tRackIT.zip
           asset_content_type: application/zip

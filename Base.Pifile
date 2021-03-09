@@ -1,5 +1,5 @@
 FROM https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2020-08-24/2020-08-20-raspios-buster-arm64-lite.zip
-PUMP 700M
+PUMP 1000M
 
 # Update OS and sources
 RUN bash -c "echo y | rpi-update"
@@ -22,61 +22,6 @@ RUN apt-get install -y \
     dnsmasq \
     bridge-utils
 
-# Set default password
-RUN bash -c 'echo "pi:natur" | chpasswd'
-
-# Allow basic connectivity (0 == success status code - enable)
-RUN raspi-config nonint do_ssh 0
-
-# Install configuration files
-INSTALL Base /
-RUN chown -R pi:pi /home/pi/
-
-# Fix permissions on host ssh files
-RUN bash -c 'chown root:root /etc/ssh/ssh_host_*'
-RUN bash -c 'chmod 600 /etc/ssh/ssh_host_*_key'
-RUN bash -c 'chmod 644 /etc/ssh/ssh_host_*_key.pub'
-RUN systemctl disable regenerate_ssh_host_keys
-
-# Install user ssh files and fix permissions
-INSTALL Base/home/pi/.ssh /home/pi/.ssh
-RUN chown pi:pi /home/pi
-RUN chown pi:pi /home/pi/.ssh
-RUN chown pi:pi /home/pi/.ssh/id_ed25519
-RUN chown pi:pi /home/pi/.ssh/id_ed25519.pub
-RUN chown pi:pi /home/pi/.ssh/authorized_keys
-RUN chmod 755   /home/pi
-RUN chmod 700   /home/pi/.ssh
-RUN chmod 600   /home/pi/.ssh/id_ed25519
-RUN chmod 644   /home/pi/.ssh/id_ed25519.pub
-RUN chmod 644   /home/pi/.ssh/authorized_keys
-
-# Install root ssh files and fix permissions
-INSTALL Base/home/pi/.ssh /root/.ssh
-RUN chown root:root /root
-RUN chown root:root /root/.ssh
-RUN chown root:root /root/.ssh/id_ed25519
-RUN chown root:root /root/.ssh/id_ed25519.pub
-RUN chown root:root /root/.ssh/authorized_keys
-RUN chmod 755       /root
-RUN chmod 700       /root/.ssh
-RUN chmod 600       /root/.ssh/id_ed25519
-RUN chmod 644       /root/.ssh/id_ed25519.pub
-RUN chmod 644       /root/.ssh/authorized_keys
-
-# Set Europe/Berlin timezone
-RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-
-# set git config for possible local commits
-RUN git config --global user.email "root@nature40-sensorbox"
-RUN git config --global user.name "Nature 4.0 Sensorbox"
-
-# Install uhubctl
-RUN bash -c 'cd /home/pi/uhubctl; make; make install'
-
-# enable hostname-config script
-RUN systemctl enable hostname-config.service
-
 # install wireguard (requires rpi-update from above)
 RUN bash -c "wget http://archive.raspbian.org/raspbian.public.key -O - | apt-key add -"
 RUN tee -a /etc/apt/sources.list.d/testing.list <<EOF
@@ -90,16 +35,7 @@ EOF
 RUN apt-get update
 RUN apt-get install -y wireguard-tools
 
-# enable wireguard
-RUN ln -s /boot/wireguard.conf /etc/wireguard/wireguard.conf
-RUN systemctl enable wg-quick@wireguard
-RUN tee -a /etc/sysdweb.conf <<EOF
-[wg-quick@wireguard]
-title = Wireguard (/boot/wireguard.conf)
-unit = wg-quick@wireguard
-EOF
-
-# Install and enable caddy
+# Install caddy
 RUN curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=arm64"
 RUN chmod +x /usr/bin/caddy
 RUN groupadd --system caddy
@@ -110,36 +46,19 @@ RUN useradd --system \
     --shell /usr/sbin/nologin \
     --comment "Caddy web server" \
     caddy
-RUN systemctl enable caddy
-RUN tee -a /etc/sysdweb.conf <<EOF
-[caddy]
-title = Caddy Web Server
-unit = caddy
-EOF
 
-# Install and enable sysdweb
+# Install mosquitto
+RUN apt-get install -y mosquitto mosquitto-clients
+
+# Install sysdweb dependecies
 RUN apt-get install -y python3-systemd python3-dbus libdbus-glib-1-dev
-RUN python3 -m pip install -e /home/pi/sysdweb
-RUN systemctl enable sysdweb
 
-# Create symlinks for other webserver targets
-RUN mkdir /data
-RUN chown pi:pi /data
-RUN ln -s . /data/sysdweb
-RUN ln -s /boot/ /data/boot
-
-# Dump dmesg to disk
-RUN systemctl enable dmesgdump
-
-# enable wifi-config script
-RUN systemctl enable interface-config@wlan0.service
-
-# Modify default network settings
-RUN bash -c "echo net.ipv4.ip_forward=1 | tee -a /etc/sysctl.conf"
-RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.conf"
-
-# enable hostapd-config script
-RUN systemctl enable hostapd-config.service
-RUN systemctl enable hostapd.service
-
-RUN bash -c 'CMDLINE=$(cat /boot/cmdline.txt); echo "${CMDLINE} -- systemd.hostname=tRackIT" > /boot/cmdline.txt'
+# Install pyradiotracking dependecies
+RUN apt-get install -y \
+    rtl-sdr \
+    python3 \
+    python3-pip \
+    python3-numpy \
+    python3-scipy \
+    python3-paho-mqtt
+RUN python3 -m pip install dash
