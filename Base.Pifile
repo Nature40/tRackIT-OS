@@ -141,3 +141,5 @@ RUN bash -c "echo net.ipv4.icmp_echo_ignore_broadcasts=0 | tee -a /etc/sysctl.co
 # enable hostapd-config script
 RUN systemctl enable hostapd-config.service
 RUN systemctl enable hostapd.service
+
+RUN bash -c 'CMDLINE=$(cat /boot/cmdline.txt); echo "${CMDLINE} -- systemd.hostname=tRackIT" > /boot/cmdline.txt'

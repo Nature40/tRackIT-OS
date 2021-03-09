@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
 IFACE="wlan0"
-SSID="nature40-sensorbox"
+SSID="${HOSTNAME}"
 
 echo "Running RaspberryPi hostapd configuration script..." 1>&2
-
-ID=`cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2 | cut -c9-16`
-
-if [ "$ID" == "" ]; then
-    echo "Error reading Raspberry Pi serial number, defaulting to $SSID" 1>&2
-else
-    SSID=${SSID}-${ID}
-fi
-
 echo "$IFACE: $SSID / $PASS" 1>&2
 
 cat <<EOF

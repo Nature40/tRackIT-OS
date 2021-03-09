@@ -11,6 +11,17 @@ else
     HOSTNAME=${HOSTNAME}-$ID
 fi
 
+echo "Scanning kernel commandline for hostname" 1>&2
+CMDLINE=( $(cat /proc/cmdline) )
+for arg in "${CMDLINE[@]}"; do
+    case "${arg}" in
+        systemd.hostname=*)
+            HOSTNAME="${arg#systemd.hostname=}"
+            echo "Found '${arg}'" 1>&2
+            ;;
+    esac
+done
+
 echo "Setting via hostnamectl: $HOSTNAME." 1>&2
 hostnamectl set-hostname $HOSTNAME
 
