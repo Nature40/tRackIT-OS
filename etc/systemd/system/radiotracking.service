@@ -7,7 +7,7 @@ StartLimitAction=reboot
 
 [Service]
 ExecStartPre=+/bin/bash -c "echo 0 > /sys/module/usbcore/parameters/usbfs_memory_mb"
-ExecStart=/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini --station %H --dashboard --dashboard-host localhost --dashboard-port 8050 --mqtt --mqtt-host localhost --mqtt-port 1883 --csv --export-config --path /data
+ExecStart=bash -c "/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini --station `hostname` --dashboard --dashboard-host localhost --dashboard-port 8050 --mqtt --mqtt-host localhost --mqtt-port 1883 --csv --export-config --path /data"
 Restart=always
 RestartSec=10s
 User=pi
