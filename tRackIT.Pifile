@@ -5,7 +5,6 @@ PUMP 400M
 INSTALL boot /boot
 INSTALL etc /etc
 INSTALL home /home
-INSTALL root /root
 INSTALL usr /usr
 INSTALL var /var
 
