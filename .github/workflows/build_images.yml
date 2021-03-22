@@ -25,9 +25,9 @@ jobs:
           pifile: tRackIT.Pifile
 
       - name: Rename tRackIT Image
-        run: mv tRackIT.img tRackIT-${{ github.event.release.tag_name }}.img
+        run: mv tRackIT.img tRackIT-${{ github.event.tag_name }}.img
       - name: Package tRackIT.zip
-        run: zip tRackIT-${{ github.event.release.tag_name }}.zip tRackIT-${{ github.event.release.tag_name }}.img
+        run: zip tRackIT-${{ github.event.tag_name }}.zip tRackIT-${{ github.event.tag_name }}.img
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -45,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tRackIT-${{ github.event.release.tag_name }}.zip
-          asset_name: tRackIT-${{ github.event.release.tag_name }}.zip
+          asset_path: tRackIT-${{ github.event.tag_name }}.zip
+          asset_name: tRackIT-${{ github.event.tag_name }}.zip
           asset_content_type: application/zip
