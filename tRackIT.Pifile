@@ -52,6 +52,9 @@ RUN bash -c 'echo "pi:natur" | chpasswd'
 # Allow basic connectivity (0 == success status code - enable)
 RUN raspi-config nonint do_ssh 0
 
+RUN raspi-config nonint do_i2c 0
+RUN tee -a /boot/config.txt <<<dtoverlay=i2c-rtc,ds3231
+
 # Set Europe/Berlin timezone
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 

@@ -1,0 +1,11 @@
+[Unit]
+Description=hwclock
+After=local-fs.target
+
+[Service]
+ExecStart=/bin/bash -c 'hwclock -s -v && systemctl stop systemd-time-wait-sync'
+Type=oneshot
+StandardOutput=journal
+
+[Install]
+RequiredBy=multi-user.target
