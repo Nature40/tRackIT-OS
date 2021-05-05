@@ -1,6 +1,6 @@
 # tRackIT OS
 
-A Raspberry Pi OS based operating system for radiotracking.
+A Raspberry Pi OS based operating system for wildlife radiotracking.
 
 ## Configuration
 
