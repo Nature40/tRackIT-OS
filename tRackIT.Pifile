@@ -68,6 +68,9 @@ RUN systemctl enable hostname-config.service
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
 RUN systemctl enable systemd-time-wait-sync.service
 
+# Reboot on kernel panic
+RUN bash -c "echo kernel.panic=10 | tee -a /etc/sysctl.conf"
+
 #################################################
 ### network configuration
 
