@@ -1,6 +1,7 @@
 # tRackIT OS
+[![Build Images](https://github.com/Nature40/tRackIT-OS/actions/workflows/build_images.yml/badge.svg)](https://github.com/Nature40/tRackIT-OS/actions/workflows/build_images.yml)
 
-A Raspberry Pi OS based operating system for wildlife radiotracking.
+Open-source Software for Reliable VHF Wildlife Tracking
 
 ## Configuration
 
