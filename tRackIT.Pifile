@@ -10,6 +10,9 @@ INSTALL var /var
 # Fix permissions for pi user
 RUN chown -R pi:pi /home/pi/
 
+# Mount boot writable for users
+RUN sed -i 's/\(boot.*vfat.*defaults\)/\1,user,umask=000/g' /etc/fstab
+
 #################################################
 ### basic configuration
 
