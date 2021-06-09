@@ -3,3 +3,6 @@
 .vscode/
 RadioTracking/boot/mosquitto.d/*.conf
 RadioTracking/boot/mosquitto.d/*.crt
+
+docs/.sass-cache
+docs/_site

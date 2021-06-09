@@ -1,1 +1,12 @@
+title: tRackIT-OS Manual
+description: Open-source Software for Reliable VHF Wildlife Tracking
+show_downloads: false
 theme: jekyll-theme-cayman
+
+# Build settings
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default" # this ensures all content renders with layouts/default.html
+
