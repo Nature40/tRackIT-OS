@@ -36,7 +36,7 @@
 
       {% for entry in site.pages %}
         {% if entry.menu %}
-          <a href="{{ entry.url }}" class="btn">{{ entry.menu }}</a>
+          <a href=".{{ entry.url }}" class="btn">{{ entry.menu }}</a>
         {% endif %}
       {% endfor %}
     </header>
