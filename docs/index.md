@@ -1,18 +1,18 @@
 ---
+menu: Quickstart
 ---
-*tRackIT OS* is an Open-source Software for Reliable VHF Wildlife Tracking. 
 
-## Quickstart
+# Quickstart
 In this quick start guide, we assume that a tRackIT station is already available and that it is now to be equipped and operated with the tRackIT OS.
 
-### 1. Download OS image
+## 1. Download OS image
 As usual in the field of single boards like the Raspberry Pi, the Operating System (OS) is delivered as an image, i.e. a file that can be transferred directly to an SD card.
 *tRackIT OS* can be downloaded at the [releases section of the respective Github repository](https://github.com/Nature40/tRackIT-OS/releases). 
 Download the file *tRackIT-x.y.z.zip* of the most recent release. 
 Pre-releases can also be tried out, but these may be untested and may not work to their full extent.
 
 
-### 2. Flash Image
+## 2. Flash Image
 A particularly user-friendly alternative for flashing Operating System Images is [BalenaEtcher](https://www.balena.io/etcher/), which is described here as an example. 
 BalenaEtcher allows to unzip and flash the downloaded .zip file to an SD card:
 
@@ -25,7 +25,7 @@ BalenaEtcher allows to unzip and flash the downloaded .zip file to an SD card:
 > Note: BalenaEtcher might ask for permissions to be granted.
 
 
-### 3. Configure Station
+## 3. Configure Station
 After flashing the card, remove and insert the SD card again to access the `boot` partition.
 There are multiple files containing the configuration of the station:
 
@@ -35,7 +35,7 @@ There are multiple files containing the configuration of the station:
 * MQTT Server: A custom MQTT server can be configured the the configuration files in the `mosquitto.d` directory.
 
 
-### 4. Deploy Station
+## 4. Deploy Station
 Safely remove the SD card from your computer and insert it into the *tRackIT station's* Raspberry Pi and boot the station by connecting the power cable.
 
 > Note: The first boot takes up to a few minutes, depending on the speed and size of the SD card, because the file system is still adjusted to the size. 
@@ -51,7 +51,7 @@ There are multiple entries serving different purposes:
 * `sysdweb`: service control, i.e. start and stop services, access logfiles,
 * `<hostname>`: data collected at the specific station.
 
-#### Check Sysdweb
+### Check Sysdweb
 To check that everything's working, first access `sysdweb` ([http://169.254.0.1/sysdweb](http://169.254.0.1/sysdweb)).
 Sysdweb requires authentication, `tRackIT OS` uses the `pi` user's default passwort is `natur`. 
 
@@ -68,14 +68,14 @@ The log messages of the running services can be accessed by clicking the service
 > Note: In this particular case there are some warnings, that multiple signals detected on SDR 1 should be added to a matching signal. If this happens, the signal of lower dBW is discarded. 
 > As this does only happen sporadically (17:05, 17:16 and 17:22) it does not mark a problem.
 
-#### Check RadioTracking
+### Check RadioTracking
 Next, access `radiotracking` to check if a nearby VHF transmitter is received correctly ([http://169.254.0.1/radiotracking](http://169.254.0.1/radiotracking)).
 
 ![Screenshot of the radiotracking user interface showing detected signals.](assets/radiotracking-signals.png)
 
 The dots in blue indicate that a VHF transmitter is received on SDR 0 (north) which indicates signal detection is running correctly. 
 
-### 5. Configuration & Calibration
+## 5. Configuration & Calibration
 *tRackIT stations* require to be calibrated when set up for the first time, since the used SDR devices differ in signal attenuation. To calibrate a station follow this routine: 
 
 1. Place a VHF transmitter roughly 150 meters away from the station.
