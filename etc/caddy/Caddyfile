@@ -9,6 +9,10 @@
         reverse_proxy http://localhost:8050
     }
 
+    route /radiotracking-config/* {
+        reverse_proxy http://localhost:8051
+    }
+
     file_server * browse {
         root /data/
     }

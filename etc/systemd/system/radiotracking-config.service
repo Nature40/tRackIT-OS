@@ -1,0 +1,15 @@
+[Unit]
+Description=RadioTracking Configuration
+After=network.target mosquitto.service time-sync.target hostname-config.service
+
+StartLimitIntervalSec=600
+StartLimitAction=reboot
+
+[Service]
+ExecStart=bash -c "/usr/bin/python3 -m radiotracking.config --config /boot/radiotracking.ini --station `hostname` --dashboard --dashboard-host localhost --dashboard-port 8050 --mqtt --mqtt-host localhost --mqtt-port 1883 --csv --export-config --path /data"
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+

@@ -109,6 +109,7 @@ RUN mkdir /data
 RUN chown pi:pi /data
 RUN ln -s . /data/sysdweb
 RUN ln -s . /data/radiotracking
+RUN ln -s . /data/radiotracking-config
 RUN ln -s /boot/ /data/boot
 
 # enable caddy
@@ -159,8 +160,13 @@ RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
 # Install radiotracking
 RUN python3 -m pip install -e /home/pi/pyradiotracking
 RUN systemctl enable radiotracking.service
+RUN systemctl enable radiotracking-config.service
 RUN tee -a /etc/sysdweb.conf <<EOF
 [radiotracking]
 title = RadioTracking
 unit = radiotracking
+
+[radiotracking-config]
+title = RadioTracking Configuration
+unit = radiotracking-config
 EOF
