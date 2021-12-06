@@ -34,9 +34,9 @@ Files in this directory are loaded by mosquitto. E.g. mqtt brokers for reporting
 
 ## Scientific Usage & Citation
 
-If you are using tRackIT OS in academia, we'd appreciate if you cited our [scientific research paper](https://jonashoechst.de/assets/papers/hoechst2021tRackIT.pdf).
+If you are using tRackIT OS in academia, we'd appreciate if you cited our [scientific research paper](https://jonashoechst.de/assets/papers/hoechst2021tRackIT.pdf). Please cite as "Höchst & Gottwald et al."
 
-> J. Höchst & J. Gottwald et al., "tRackIT OS: Open-source Software for Reliable VHF Wildlife Tracking," in 51. Jahrestagung der Gesellschaft für Informatik, Digitale Kulturen, INFORMATIK 2021, Berlin, Germany, 2021.
+> J. Höchst, J. Gottwald, P. Lampe, J. Zobel, T. Nauss, R. Steinmetz, and B. Freisleben, “tRackIT OS: Open-source Software for Reliable VHF Wildlife Tracking,” in 51. Jahrestagung der Gesellschaft für Informatik, Digitale Kulturen, INFORMATIK 2021, Berlin, Germany, 2021.
 
 ```bibtex
 @inproceedings{hoechst2021tRackIT,
