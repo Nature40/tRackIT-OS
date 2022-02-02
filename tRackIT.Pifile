@@ -1,5 +1,5 @@
 FROM Base.img
-PUMP 400M
+PUMP 300M
 
 # Install custom folders 
 INSTALL boot /boot
