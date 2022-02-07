@@ -3,8 +3,8 @@ Description=Dump dmesg logs since boot
 After=network.target
 
 [Service]
-ExecStartPre=/bin/sh -c "mkdir -p /data/`hostname`/log/"
-ExecStart=/bin/sh -c "exec dmesg -w > /data/`hostname`/log/`date +%%Y-%%m-%%dT%%H%%M%%S`_dmesg.txt"
+ExecStartPre=/bin/sh -c "mkdir -p /data/`hostname`/dmesg/"
+ExecStart=/bin/sh -c "exec dmesg -W | tee /data/`hostname`/dmesg/`date +%%Y-%%m-%%dT%%H%%M%%S`_dmesg.txt | mosquitto_pub -l -t `hostname`/dmesg"
 Restart=always
 RestartSec=10s
 User=pi

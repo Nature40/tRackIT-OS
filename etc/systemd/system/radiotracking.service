@@ -2,14 +2,17 @@
 Description=RadioTracking
 After=network.target mosquitto.service time-sync.target hostname-config.service
 
-StartLimitIntervalSec=600
+# Reboot after more than 10 restarts in 15 minutes happened.
+# This will happen after 10 minutes at the earliest, according to service configuration.
+StartLimitBurst=10
+StartLimitIntervalSec=900s
 StartLimitAction=reboot
 
 [Service]
 ExecStartPre=+/bin/bash -c "echo 0 > /sys/module/usbcore/parameters/usbfs_memory_mb"
-ExecStart=bash -c "/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini --station `hostname` --dashboard --dashboard-host localhost --dashboard-port 8050 --mqtt --mqtt-host localhost --mqtt-port 1883 --csv --export-config --path /data"
+ExecStart=/bin/bash -c "/usr/bin/python3 -m radiotracking --config /boot/radiotracking.ini --station `hostname` --dashboard --dashboard-host localhost --dashboard-port 8050 --mqtt --mqtt-host localhost --mqtt-port 1883 --csv --export-config --path /data"
 Restart=always
-RestartSec=10s
+RestartSec=60s
 User=pi
 Group=pi
 
