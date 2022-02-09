@@ -170,3 +170,15 @@ unit = radiotracking
 title = RadioTracking Configuration
 unit = radiotracking-config
 EOF
+
+# Enable hardware connectivity 
+RUN raspi-config nonint do_spi 0
+RUN raspi-config nonint do_serial 2
+
+RUN systemctl disable serial-getty@ttyS0.service
+
+# Disable freq scaling to fix miniuart issues, i.e., https://wiki.dragino.com/index.php?title=Getting_GPS_to_work_on_Raspberry_Pi_3_Model_B
+RUN tee -a /boot/config.txt <<EOF
+core_freq=250
+force_turbo=1
+EOF
