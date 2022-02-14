@@ -128,11 +128,11 @@ title = Mosquitto MQTT Broker
 unit = mosquitto
 EOF
 
-# List timesyncd
+# List chrony
 RUN tee -a /etc/sysdweb.conf <<EOF
-[timesyncd]
-title = Network Time Synchronization
-unit = systemd-timesyncd
+[chrony]
+title = Chrony Time Synchronization
+unit = chrony
 EOF
 
 # Install and enable pymqttutil
@@ -147,12 +147,6 @@ EOF
 
 # Install uhubctl (dependency) and enable huaweicheck
 RUN bash -c 'cd /home/pi/uhubctl; make; make install'
-RUN systemctl enable huaweicheck.timer
-RUN tee -a /etc/sysdweb.conf <<EOF
-[huaweicheck]
-title = Huawei Check
-unit = huaweicheck
-EOF
 
 # Blacklist DVB-T driver
 RUN tee -a /etc/modprobe.d/raspi-blacklist.conf <<<'blacklist dvb_usb_rtl28xxu'
