@@ -19,7 +19,8 @@ RUN apt-get install -y \
     tcpdump \
     hostapd \
     dnsmasq \
-    bridge-utils
+    bridge-utils \
+    iptables
 
 # install wireguard (requires rpi-update from above)
 RUN bash -c "wget http://archive.raspbian.org/raspbian.public.key -O - | apt-key add -"

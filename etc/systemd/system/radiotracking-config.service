@@ -1,6 +1,6 @@
 [Unit]
 Description=RadioTracking Configuration
-After=network.target mosquitto.service time-sync.target hostname-config.service
+After=network.target hostname-config.service
 
 StartLimitIntervalSec=600
 StartLimitAction=reboot
