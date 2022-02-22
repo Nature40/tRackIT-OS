@@ -65,7 +65,7 @@ RUN git config --global user.email "pi@tRackIT"
 RUN git config --global user.name "tRackIT User"
 
 # enable hostname-config script and set default hostname
-RUN bash -c 'CMDLINE=$(cat /boot/cmdline.txt); echo "${CMDLINE} -- systemd.hostname=tRackIT" > /boot/cmdline.txt'
+RUN bash -c 'CMDLINE=$(cat /boot/cmdline.txt); echo "${CMDLINE} -- systemd.hostname=umr-test-00001" > /boot/cmdline.txt'
 RUN systemctl enable hostname-config.service
 
 # Enabling wait for time-sync.target (depending services will not start before the clock is synced)
@@ -134,6 +134,7 @@ RUN tee -a /etc/sysdweb.conf <<EOF
 title = Chrony Time Synchronization
 unit = chrony
 EOF
+RUN systemctl enable chrony-waitsync
 
 # Install and enable pymqttutil
 RUN python3 -m pip install -e /home/pi/pymqttutil

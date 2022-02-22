@@ -6,3 +6,4 @@ RadioTracking/boot/mosquitto.d/*.crt
 
 docs/.sass-cache
 docs/_site
+boot/wireguard.conf

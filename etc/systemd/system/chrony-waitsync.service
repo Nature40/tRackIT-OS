@@ -1,0 +1,11 @@
+[Unit]
+Description=Wait until chrony timesync and notify systemd.
+After=chrony.service
+
+[Service]
+ExecStart=/bin/bash -c 'chronyc waitsync && (mkdir -p /run/systemd/timesync/; touch /run/systemd/timesync/synchronized)'
+Type=oneshot
+StandardOutput=journal
+
+[Install]
+RequiredBy=multi-user.target
