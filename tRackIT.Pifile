@@ -146,6 +146,9 @@ title = MQTTUtil
 unit = mqttutil
 EOF
 
+# Enable dmesgdump
+RUN systemctl enable dmesgdump
+
 # Install uhubctl (dependency) and enable huaweicheck
 RUN bash -c 'cd /home/pi/uhubctl; make; make install'
 
