@@ -180,3 +180,6 @@ RUN tee -a /boot/config.txt <<EOF
 core_freq=250
 force_turbo=1
 EOF
+
+# Install docs folder (if rendered to HTML)
+HOST test -d docs/_site/ && INSTALL docs/_site /data/docs
