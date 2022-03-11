@@ -1,0 +1,9 @@
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+    <name>Mosquitto MQTT</name>
+    <service>
+        <type>_mqtt._tcp</type>
+        <port>1883</port>
+    </service>
+</service-group>
+
