@@ -6,6 +6,7 @@ INSTALL boot /boot
 INSTALL etc /etc
 INSTALL home /home
 INSTALL var /var
+INSTALL usr /usr
 
 # Fix permissions for pi user
 RUN chown -R pi:pi /home/pi/
@@ -49,7 +50,8 @@ RUN chmod 644       /root/.ssh/id_ed25519.pub
 RUN chmod 644       /root/.ssh/authorized_keys
 
 # Set default password
-RUN bash -c 'echo "pi:natur" | chpasswd'
+RUN bash -c 'echo -e "pi:" > /boot/userconf.txt'
+RUN bash -c 'echo "natur" | openssl passwd -6 -stdin >> /boot/userconf.txt'
 
 # Allow basic connectivity (0 == success status code - enable)
 RUN raspi-config nonint do_ssh 0
