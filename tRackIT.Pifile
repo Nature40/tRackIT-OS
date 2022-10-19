@@ -8,6 +8,16 @@ INSTALL home /home
 INSTALL var /var
 INSTALL usr /usr
 
+# Install git folders for history
+RUN rm /home/pi/sysdweb/.git
+INSTALL .git/modules/Base/home/pi/sysdweb /home/pi/sysdweb/.git
+
+RUN rm /home/pi/pyradiotracking/.git
+INSTALL .git/modules/RadioTracking/home/pi/pyradiotracking /home/pi/pyradiotracking/.git
+
+RUN rm /home/pi/pymqttutil/.git
+INSTALL .git/modules/RadioTracking/home/pi/pymqttutil /home/pi/pymqttutil/.git
+
 # Fix permissions for pi user
 RUN chown -R pi:pi /home/pi/
 
