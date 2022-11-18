@@ -148,6 +148,9 @@ unit = chrony
 EOF
 RUN systemctl enable chrony-waitsync
 
+# Install and enable pysmartsolar
+RUN python3 -m pip install -e /home/pi/pysmartsolar
+
 # Install and enable pymqttutil
 RUN python3 -m pip install -e /home/pi/pymqttutil
 RUN python3 -m pip install psutil

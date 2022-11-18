@@ -13,3 +13,6 @@
 [submodule "RadioTracking/home/pi/pymqttutil"]
 	path = home/pi/pymqttutil
 	url = https://github.com/Nature40/pymqttutil
+[submodule "home/pi/pysmartsolar"]
+	path = home/pi/pysmartsolar
+	url = https://github.com/tRackIT-System/pysmartsolar
