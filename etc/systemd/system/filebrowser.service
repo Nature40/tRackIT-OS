@@ -1,0 +1,12 @@
+[Unit]
+Description=filebrowser
+After=network.target
+
+[Service]
+WorkingDirectory=/data/
+ExecStart=/usr/bin/filebrowser -d /etc/filebrowser/filebrowser.db -c /etc/filebrowser/filebrowser.yml --noauth 
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

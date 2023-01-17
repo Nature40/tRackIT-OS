@@ -119,18 +119,13 @@ RUN systemctl enable sysdweb
 # Create symlinks for other webserver targets
 RUN mkdir /data
 RUN chown pi:pi /data
-RUN ln -s . /data/sysdweb
-RUN ln -s . /data/radiotracking
-RUN ln -s . /data/radiotracking-config
 RUN ln -s /boot/ /data/boot
 
 # enable caddy
 RUN systemctl enable caddy
-RUN tee -a /etc/sysdweb.conf <<EOF
-[caddy]
-title = Caddy Web Server
-unit = caddy
-EOF
+
+# enable filebrowser
+RUN systemctl enable filebrowser
 
 # enable mosquitto
 RUN systemctl enable mosquitto.service

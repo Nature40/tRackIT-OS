@@ -1,19 +1,22 @@
 :80 {
     encode gzip
+
+    root * /home/pi/html
+    file_server
     
     handle_path /sysdweb/* {
         reverse_proxy http://localhost:10080
     }    
-    
+
+    handle_path /data/* {
+        reverse_proxy http://localhost:8080
+    }
+ 
     route /radiotracking/* {
         reverse_proxy http://localhost:8050
     }
 
     route /radiotracking-config/* {
         reverse_proxy http://localhost:8051
-    }
-
-    file_server * browse {
-        root /data/
     }
 }
