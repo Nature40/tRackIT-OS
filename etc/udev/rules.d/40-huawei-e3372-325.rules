@@ -1,0 +1,21 @@
+# usb_modeswitch script for Huawei / Brovi e7720-325
+# credit: https://www.draisberghof.de/usb_modeswitch/bb/viewtopic.php?f=3&t=3043
+
+ACTION!="add", GOTO="modeswitch_rules_end"
+SUBSYSTEM!="usb", GOTO="modeswitch_rules_end"
+
+# All known install partitions are on interface 0
+ATTRS{bInterfaceNumber}!="00", GOTO="modeswitch_rules_end"
+
+# only storage class devices are handled; negative
+# filtering here would exclude some quirky devices
+ATTRS{bDeviceClass}=="e0", GOTO="modeswitch_rules_begin"
+ATTRS{bInterfaceClass}=="e0", GOTO="modeswitch_rules_begin"
+GOTO="modeswitch_rules_end"
+
+LABEL="modeswitch_rules_begin"
+# Huawei E3372-325
+ATTRS{idVendor}=="3566", ATTRS{idProduct}=="2001", RUN+="/sbin/usb_modeswitch -v 3566 -p 2001 -W -R -w 400"
+ATTRS{idVendor}=="3566", ATTRS{idProduct}=="2001", RUN+="/sbin/usb_modeswitch -v 3566 -p 2001 -W -R"
+
+LABEL="modeswitch_rules_end"
