@@ -1,3 +1,5 @@
+### Warning: tRackIT OS was forked and is not longer maintained here. Newer versions can be found here: [https://github.com/tRackIT-Systems/tRackIT-OS/](https://github.com/tRackIT-Systems/tRackIT-OS/) 
+
 # tRackIT OS
 [![Build Images](https://github.com/Nature40/tRackIT-OS/actions/workflows/build_images.yml/badge.svg)](https://github.com/Nature40/tRackIT-OS/actions/workflows/build_images.yml)
 
